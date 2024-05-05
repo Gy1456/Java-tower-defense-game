@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>App.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">scaffold</a> &gt; <a href="index.source.html" class="el_package">WizardTD</a> &gt; <span class="el_source">App.java</span></div><h1>App.java</h1><pre class="source lang-java linenums">package WizardTD;
+import WizardTD.DrawTool.*;
+import WizardTD.Gamebase.GameSet;
+import WizardTD.MODEL.*;
+import WizardTD.UiObject.*;
+import WizardTD.Wavemanage.*;
+import processing.core.PApplet;
+import processing.core.PImage;
+import processing.data.JSONArray;
+import processing.data.JSONObject;
+import processing.event.MouseEvent;
+import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.Scanner;
+import java.io.File;
+import java.io.*;
+import java.util.*;
+import javax.sound.sampled.*;
+
+public class App extends PApplet {
+    //Default variable
+    public static final int CELLSIZE = 32;
+    public static final int SIDEBAR = 120;
+    public static final int TOPBAR = 40;
+    public static final int BOARD_WIDTH = 20;
+<span class="fc" id="L28">    public static int WIDTH = CELLSIZE*BOARD_WIDTH+SIDEBAR;</span>
+<span class="fc" id="L29">    public static int HEIGHT = BOARD_WIDTH*CELLSIZE+TOPBAR;</span>
+    public static final int FPS = 60;
+    public String configPath;
+    //Created variables
+    public HashMap&lt;String,PImage&gt; maps;
+    public Board board;
+    public Wavemangement wavemangement;
+    public GameSet set;
+    public Mana mana;
+    public DrawTool drawMonsters;
+    public DrawTool drawmap;
+    public DrawTool drawTowers;
+    public DrawTool drawfireballs;
+    public DrawTool drawwave;
+    public DrawTool drawWizard;
+    public DrawUI drawUI;
+    public UI accelerateUI;
+    public UI buidUI;
+    public UI damageUI;
+    public UI manaUI;
+    public UI pauseUI;
+    public UI rangeUI;
+    public UI speedUI;
+
+<span class="fc" id="L53">    public int[] waves_duration=new int[3];</span>
+<span class="fc" id="L54">    public double[] waves_pre_wave_pause=new double[3];</span>
+<span class="fc" id="L55">    public String[] waves_pre_monsters_type=new String[3];</span>
+<span class="fc" id="L56">    public double[] waves_pre_monsters_hp=new double[3];</span>
+<span class="fc" id="L57">    public int[] waves_pre_monsters_speed=new int[3];</span>
+<span class="fc" id="L58">    public double[] waves_pre_monsters_armour=new double[3];</span>
+<span class="fc" id="L59">    public double[] waves_pre_monsters_mana_gained_on_kill=new double[3];</span>
+<span class="fc" id="L60">    public int[] waves_pre_monsters_quantity=new int[3];</span>
+    public double initial_tower_range;
+    public double initial_tower_firing_speed;
+    public double initial_tower_damage;
+    public double initial_mana;
+    public double initial_mana_cap;
+    public double initial_mana_gained_per_second;
+    public double tower_cost;
+    public double mana_pool_spell_initial_cost;
+    public double mana_pool_spell_cost_increase_per_use;
+    public double mana_pool_spell_cap_multiplier;
+    public double mana_pool_spell_mana_gained_multiplier;
+    public Clip soundClip;
+    public HashMap&lt;String,Clip&gt; sound;
+<span class="fc" id="L74">    public Random random = new Random();</span>
+	// Feel free to add any additional methods or attributes you want. Please put classes in different files.
+<span class="fc" id="L76">    public App() {</span>
+<span class="fc" id="L77">        this.configPath = &quot;config.json&quot;;</span>
+<span class="fc" id="L78">    }</span>
+    /**
+     * Initialise the setting of the window size.
+     */
+	@Override
+    public void settings() {
+<span class="fc" id="L84">        size(WIDTH, HEIGHT);</span>
+<span class="fc" id="L85">    }</span>
+    /**
+     * Load all resources such as images. Initialise the elements such as the player, enemies and map elements.
+     */
+	@Override
+    public void setup() {
+<span class="fc" id="L91">        frameRate(FPS);</span>
+        //load image
+<span class="fc" id="L93">        maps=new HashMap&lt;&gt;();</span>
+<span class="fc" id="L94">        sound=new HashMap&lt;&gt;();</span>
+<span class="fc" id="L95">        set=new GameSet(sound);</span>
+        try {
+<span class="fc" id="L97">            String[] sname=new String[]{&quot;pause&quot;,&quot;fire&quot;,&quot;accelerate&quot;,&quot;plant&quot;,&quot;failto&quot;,&quot;levelup&quot;,&quot;mana&quot;,&quot;lose&quot;,&quot;win&quot;,&quot;pick&quot;};</span>
+<span class="fc bfc" id="L98" title="All 2 branches covered.">            for(String s:sname){</span>
+<span class="fc" id="L99">                AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(this.getClass().getClassLoader().</span>
+<span class="fc" id="L100">                        getResource(&quot;WizardTD/&quot;+s+&quot;.wav&quot;));</span>
+<span class="fc" id="L101">                soundClip = AudioSystem.getClip();</span>
+<span class="pc bpc" id="L102" title="1 of 2 branches missed.">                if (soundClip.isOpen()) {</span>
+<span class="nc" id="L103">                    soundClip.close();</span>
+                }
+<span class="fc" id="L105">                soundClip.open(audioInputStream);</span>
+<span class="fc" id="L106">                sound.put(s,soundClip);</span>
+            }
+<span class="nc" id="L108">        } catch (Exception e) {</span>
+<span class="nc" id="L109">            e.printStackTrace();</span>
+<span class="fc" id="L110">        }</span>
+<span class="fc" id="L111">        JSONObject conf= loadJSONObject(new File(this.configPath));</span>
+<span class="fc" id="L112">        String level=conf.getString(&quot;layout&quot;);</span>
+<span class="fc" id="L113">        JSONArray waves = conf.getJSONArray(&quot;waves&quot;);</span>
+<span class="fc" id="L114">        String [] pname=new String[]{&quot;beetle&quot;,&quot;fireball&quot;,&quot;grass&quot;,&quot;gremlin&quot;,</span>
+                &quot;gremlin1&quot;,&quot;gremlin2&quot;,&quot;gremlin3&quot;,&quot;gremlin4&quot;,&quot;gremlin5&quot;,&quot;path0&quot;,&quot;path1&quot;,&quot;path2&quot;,&quot;path3&quot;,&quot;shrub&quot;,&quot;tower0&quot;,
+                &quot;tower1&quot;,&quot;tower2&quot;,&quot;wizard_house&quot;,&quot;worm&quot;};
+<span class="fc bfc" id="L117" title="All 2 branches covered.">        for (String s : pname) {</span>
+<span class="fc" id="L118">            PImage image = loadImage(this.getClass().getClassLoader().getResource(&quot;WizardTD/&quot; + s + &quot;.png&quot;).getPath());</span>
+<span class="fc" id="L119">            maps.put(s, image);</span>
+        }
+        //load initialization
+<span class="fc bfc" id="L122" title="All 2 branches covered.">        for(int i=0;i&lt;3;i++){</span>
+<span class="fc" id="L123">            waves_duration[i]=waves.getJSONObject(i).getInt(&quot;duration&quot;);</span>
+<span class="fc" id="L124">            waves_pre_wave_pause[i]=waves.getJSONObject(i).getDouble(&quot;pre_wave_pause&quot;);</span>
+<span class="fc" id="L125">            waves_pre_monsters_type[i]=waves.getJSONObject(i).getJSONArray(&quot;monsters&quot;)</span>
+<span class="fc" id="L126">                    .getJSONObject(0).getString(&quot;type&quot;);</span>
+<span class="fc" id="L127">            waves_pre_monsters_hp[i]=waves.getJSONObject(i).getJSONArray(&quot;monsters&quot;)</span>
+<span class="fc" id="L128">                    .getJSONObject(0).getDouble(&quot;hp&quot;);</span>
+<span class="fc" id="L129">            waves_pre_monsters_speed[i]=waves.getJSONObject(i).getJSONArray(&quot;monsters&quot;)</span>
+<span class="fc" id="L130">                    .getJSONObject(0).getInt(&quot;speed&quot;);</span>
+<span class="fc" id="L131">            waves_pre_monsters_armour[i]=waves.getJSONObject(i).getJSONArray(&quot;monsters&quot;)</span>
+<span class="fc" id="L132">                    .getJSONObject(0).getDouble(&quot;armour&quot;);</span>
+<span class="fc" id="L133">            waves_pre_monsters_mana_gained_on_kill[i]=waves.getJSONObject(i).getJSONArray(&quot;monsters&quot;)</span>
+<span class="fc" id="L134">                    .getJSONObject(0).getDouble(&quot;mana_gained_on_kill&quot;);</span>
+<span class="fc" id="L135">            waves_pre_monsters_quantity[i]=waves.getJSONObject(i).getJSONArray(&quot;monsters&quot;)</span>
+<span class="fc" id="L136">                    .getJSONObject(0).getInt(&quot;quantity&quot;);</span>
+        }
+<span class="fc" id="L138">        char[][]array=new char[20][20];</span>
+        try {
+<span class="fc" id="L140">            Scanner scanner = new Scanner(new File(level));</span>
+<span class="fc" id="L141">            int row = 0;</span>
+<span class="pc bpc" id="L142" title="1 of 4 branches missed.">            while (scanner.hasNextLine() &amp;&amp; row &lt; 20) {</span>
+<span class="fc" id="L143">                String line = scanner.nextLine();</span>
+<span class="pc bpc" id="L144" title="1 of 4 branches missed.">                for (int col = 0; col &lt; 20 &amp;&amp; col &lt; line.length(); col++) {</span>
+<span class="fc" id="L145">                    char c = line.charAt(col);</span>
+<span class="fc bfc" id="L146" title="All 2 branches covered.">                    if (c == ' ') {</span>
+<span class="fc" id="L147">                        array[row][col] = 'N';</span>
+                    } else {
+<span class="fc" id="L149">                        array[row][col] = c;</span>
+                    }
+                }
+<span class="fc" id="L152">                row++;</span>
+<span class="fc" id="L153">            }</span>
+<span class="fc" id="L154">            scanner.close();</span>
+<span class="nc" id="L155">        } catch (FileNotFoundException e) {</span>
+<span class="nc" id="L156">            e.printStackTrace();</span>
+<span class="fc" id="L157">        }</span>
+<span class="fc" id="L158">        initial_tower_range=conf.getDouble(&quot;initial_tower_range&quot;);</span>
+<span class="fc" id="L159">        initial_tower_firing_speed=conf.getDouble(&quot;initial_tower_firing_speed&quot;);</span>
+<span class="fc" id="L160">        initial_tower_damage=conf.getDouble(&quot;initial_tower_damage&quot;);</span>
+<span class="fc" id="L161">        initial_mana=conf.getDouble(&quot;initial_mana&quot;);</span>
+<span class="fc" id="L162">        initial_mana_cap=conf.getDouble(&quot;initial_mana_cap&quot;);</span>
+<span class="fc" id="L163">        initial_mana_gained_per_second=conf.getDouble(&quot;initial_mana_gained_per_second&quot;);</span>
+<span class="fc" id="L164">        tower_cost=conf.getDouble(&quot;tower_cost&quot;);</span>
+<span class="fc" id="L165">        mana_pool_spell_initial_cost=conf.getDouble(&quot;mana_pool_spell_initial_cost&quot;);</span>
+<span class="fc" id="L166">        mana_pool_spell_cost_increase_per_use=conf.getDouble(&quot;mana_pool_spell_cost_increase_per_use&quot;);</span>
+<span class="fc" id="L167">        mana_pool_spell_cap_multiplier=conf.getDouble(&quot;mana_pool_spell_cap_multiplier&quot;);</span>
+<span class="fc" id="L168">        mana_pool_spell_mana_gained_multiplier=conf.getDouble(&quot;mana_pool_spell_mana_gained_multiplier&quot;);</span>
+<span class="fc" id="L169">        mana=new Mana(initial_mana,initial_mana_cap,initial_mana_gained_per_second,mana_pool_spell_initial_cost,</span>
+                mana_pool_spell_cost_increase_per_use,mana_pool_spell_cap_multiplier,
+                mana_pool_spell_mana_gained_multiplier,set);
+<span class="fc" id="L172">        wavemangement=new Wavemangement(waves_duration,waves_pre_wave_pause,waves_pre_monsters_type,</span>
+                waves_pre_monsters_hp,waves_pre_monsters_speed,waves_pre_monsters_armour,
+                waves_pre_monsters_mana_gained_on_kill,waves_pre_monsters_quantity,mana,set);
+<span class="fc" id="L175">        board=new Board(array,mana,initial_tower_firing_speed,initial_tower_range,initial_tower_damage,tower_cost,</span>
+                wavemangement,set,sound);
+<span class="fc" id="L177">        board.creatboard();</span>
+<span class="fc" id="L178">        accelerateUI=new AccelerateUI();</span>
+<span class="fc" id="L179">        buidUI=new BuidUI();</span>
+<span class="fc" id="L180">        damageUI=new DamageUI();</span>
+<span class="fc" id="L181">        manaUI=new ManaUI();</span>
+<span class="fc" id="L182">        pauseUI=new PauseUI();</span>
+<span class="fc" id="L183">        rangeUI=new RangeUI();</span>
+<span class="fc" id="L184">        speedUI=new SpeedUI();</span>
+<span class="fc" id="L185">        drawUI=new DrawUI(accelerateUI,buidUI,damageUI,manaUI,pauseUI,rangeUI,speedUI,set,mana,board,maps);</span>
+<span class="fc" id="L186">        drawMonsters=new DrawMonsters(board,maps,wavemangement,set);</span>
+<span class="fc" id="L187">        drawmap=new DrawMap(maps,board,mana,set);</span>
+<span class="fc" id="L188">        drawTowers=new DrawTowers(maps,board,set);</span>
+<span class="fc" id="L189">        drawfireballs=new Drawfireballs(board,maps,set);</span>
+<span class="fc" id="L190">        drawwave=new Drawwave(wavemangement,set,maps,mana);</span>
+<span class="fc" id="L191">        drawWizard=new DrawWizard(board,maps);</span>
+<span class="fc" id="L192">        wavemangement.addwave();</span>
+        // Load images during setup
+		// Eg:
+        // loadImage(&quot;src/main/resources/WizardTD/tower0.png&quot;);
+        // loadImage(&quot;src/main/resources/WizardTD/tower1.png&quot;);
+        // loadImage(&quot;src/main/resources/WizardTD/tower2.png&quot;);
+<span class="fc" id="L198">    }</span>
+    /**
+     * Receive key pressed signal from the keyboard.
+     */
+	@Override
+    public void keyPressed(){
+<span class="nc" id="L204">    }</span>
+    /**
+     * Receive key released signal from the keyboard.
+     */
+	@Override
+    public void keyReleased(){
+<span class="pc bpc" id="L210" title="1 of 4 branches missed.">        if (key == 'r' || key == 'R') {</span>
+<span class="fc" id="L211">            setup();</span>
+        }
+<span class="pc bpc" id="L213" title="1 of 4 branches missed.">        if(key == 'p' || key == 'P'){</span>
+<span class="fc bfc" id="L214" title="All 2 branches covered.">            if(!set.isGamepause()) {</span>
+<span class="fc" id="L215">                set.pausegame();</span>
+            }
+            else{
+<span class="fc" id="L218">                set.startgame();</span>
+            }
+        }
+<span class="pc bpc" id="L221" title="1 of 4 branches missed.">        if(key == 'f' || key == 'F'){</span>
+<span class="fc bfc" id="L222" title="All 2 branches covered.">            if(!set.isGameaccelerate()) {</span>
+<span class="fc" id="L223">                set.accelerategame();</span>
+            }
+            else{
+<span class="fc" id="L226">                set.notaccelerategame();</span>
+            }
+        }
+<span class="pc bpc" id="L229" title="1 of 4 branches missed.">        if(key == 'm' || key == 'M'){</span>
+<span class="fc" id="L230">            mana.manaspell();</span>
+        }
+<span class="pc bpc" id="L232" title="1 of 4 branches missed.">            if (key == 't' || key == 'T') {</span>
+<span class="fc" id="L233">                board.enablebuild();</span>
+            }
+<span class="fc bfc" id="L235" title="All 2 branches covered.">            if (key == '1') {</span>
+<span class="fc" id="L236">                board.enableRangelevelup();</span>
+            }
+<span class="fc bfc" id="L238" title="All 2 branches covered.">            if (key == '2') {</span>
+<span class="fc" id="L239">                board.enablespeedlevelup();</span>
+            }
+<span class="fc bfc" id="L241" title="All 2 branches covered.">            if (key == '3') {</span>
+<span class="fc" id="L242">                board.enableDamagelevelup();</span>
+            }
+<span class="fc" id="L244">    }</span>
+    @Override
+    public void mousePressed(MouseEvent e) {
+<span class="nc" id="L247">    }</span>
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+<span class="nc" id="L251">        board.operate(mouseX,mouseY);</span>
+<span class="nc bnc" id="L252" title="All 2 branches missed.">        if(accelerateUI.getcotain()){</span>
+<span class="nc bnc" id="L253" title="All 2 branches missed.">            if(!set.isGameaccelerate()) {</span>
+<span class="nc" id="L254">                set.accelerategame();</span>
+            }
+            else{
+<span class="nc" id="L257">                set.notaccelerategame();</span>
+            }
+        }
+<span class="nc bnc" id="L260" title="All 2 branches missed.">        if(pauseUI.getcotain()){</span>
+<span class="nc bnc" id="L261" title="All 2 branches missed.">            if(!set.isGamepause()) {</span>
+<span class="nc" id="L262">                set.pausegame();</span>
+            }
+            else{
+<span class="nc" id="L265">                set.startgame();</span>
+            }
+        }
+<span class="nc bnc" id="L268" title="All 2 branches missed.">        if(buidUI.getcotain()){</span>
+<span class="nc" id="L269">            board.enablebuild();</span>
+        }
+<span class="nc bnc" id="L271" title="All 2 branches missed.">        if(rangeUI.getcotain()){</span>
+<span class="nc" id="L272">            board.enableRangelevelup();</span>
+        }
+<span class="nc bnc" id="L274" title="All 2 branches missed.">        if(speedUI.getcotain()){</span>
+<span class="nc" id="L275">            board.enablespeedlevelup();</span>
+        }
+<span class="nc bnc" id="L277" title="All 2 branches missed.">        if(damageUI.getcotain()){</span>
+<span class="nc" id="L278">            board.enableDamagelevelup();</span>
+        }
+<span class="nc bnc" id="L280" title="All 2 branches missed.">        if(manaUI.getcotain()){</span>
+<span class="nc" id="L281">            mana.manaspell();</span>
+        }
+<span class="nc" id="L283">    }</span>
+    @Override
+    public void mouseMoved(MouseEvent e) {
+<span class="nc" id="L286">        accelerateUI.contain(e.getX(),e.getY());</span>
+<span class="nc" id="L287">        pauseUI.contain(e.getX(),e.getY());</span>
+<span class="nc" id="L288">        buidUI.contain(e.getX(),e.getY());</span>
+<span class="nc" id="L289">        rangeUI.contain(e.getX(),e.getY());</span>
+<span class="nc" id="L290">        speedUI.contain(e.getX(),e.getY());</span>
+<span class="nc" id="L291">        damageUI.contain(e.getX(),e.getY());</span>
+<span class="nc" id="L292">        manaUI.contain(e.getX(),e.getY());</span>
+<span class="nc" id="L293">        board.containtower(e.getX(),e.getY());</span>
+<span class="nc" id="L294">    }</span>
+    /*@Override
+    public void mouseDragged(MouseEvent e) {
+
+    }*/
+    /**
+     * Draw all elements in the game by current frame.
+     */
+	@Override
+    public void draw() {
+<span class="fc" id="L304">        background(100, 0, 200);</span>
+<span class="fc" id="L305">        drawmap.draw(this);</span>
+<span class="fc" id="L306">        drawTowers.draw(this);</span>
+<span class="fc" id="L307">        drawMonsters.draw(this);</span>
+<span class="fc" id="L308">        drawUI.draw(this);</span>
+<span class="fc" id="L309">        drawTowers.draw(this);</span>
+<span class="fc" id="L310">        drawfireballs.draw(this);</span>
+<span class="fc" id="L311">        drawwave.draw(this);</span>
+<span class="fc" id="L312">        drawWizard.draw(this);</span>
+<span class="fc" id="L313">    }</span>
+    public static void main(String[] args) {
+<span class="nc" id="L315">        PApplet.main(&quot;WizardTD.App&quot;);</span>
+<span class="nc" id="L316">    }</span>
+
+    /**
+     * Source: https://stackoverflow.com/questions/37758061/rotate-a-buffered-image-in-java
+     * @param pimg The image to be rotated
+     * @param angle between 0 and 360 degrees
+     * @return the new rotated image
+     */
+    public PImage rotateImageByDegrees(PImage pimg, double angle) {
+<span class="fc" id="L325">        BufferedImage img = (BufferedImage) pimg.getNative();</span>
+<span class="fc" id="L326">        double rads = Math.toRadians(angle);</span>
+<span class="fc" id="L327">        double sin = Math.abs(Math.sin(rads)), cos = Math.abs(Math.cos(rads));</span>
+<span class="fc" id="L328">        int w = img.getWidth();</span>
+<span class="fc" id="L329">        int h = img.getHeight();</span>
+<span class="fc" id="L330">        int newWidth = (int) Math.floor(w * cos + h * sin);</span>
+<span class="fc" id="L331">        int newHeight = (int) Math.floor(h * cos + w * sin);</span>
+
+<span class="fc" id="L333">        PImage result = this.createImage(newWidth, newHeight, RGB);</span>
+        //BufferedImage rotated = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
+<span class="fc" id="L335">        BufferedImage rotated = (BufferedImage) result.getNative();</span>
+<span class="fc" id="L336">        Graphics2D g2d = rotated.createGraphics();</span>
+<span class="fc" id="L337">        AffineTransform at = new AffineTransform();</span>
+<span class="fc" id="L338">        at.translate((newWidth - w) / 2, (newHeight - h) / 2);</span>
+
+<span class="fc" id="L340">        int x = w / 2;</span>
+<span class="fc" id="L341">        int y = h / 2;</span>
+
+<span class="fc" id="L343">        at.rotate(rads, x, y);</span>
+<span class="fc" id="L344">        g2d.setTransform(at);</span>
+<span class="fc" id="L345">        g2d.drawImage(img, 0, 0, null);</span>
+<span class="fc" id="L346">        g2d.dispose();</span>
+<span class="fc bfc" id="L347" title="All 2 branches covered.">        for (int i = 0; i &lt; newWidth; i++) {</span>
+<span class="fc bfc" id="L348" title="All 2 branches covered.">            for (int j = 0; j &lt; newHeight; j++) {</span>
+<span class="fc" id="L349">                result.set(i, j, rotated.getRGB(i, j));</span>
+            }
+        }
+<span class="fc" id="L352">        return result;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>

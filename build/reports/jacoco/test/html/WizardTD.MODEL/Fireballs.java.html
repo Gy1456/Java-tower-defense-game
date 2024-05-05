@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Fireballs.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">scaffold</a> &gt; <a href="index.source.html" class="el_package">WizardTD.MODEL</a> &gt; <span class="el_source">Fireballs.java</span></div><h1>Fireballs.java</h1><pre class="source lang-java linenums">package WizardTD.MODEL;
+
+public class Fireballs {
+    /**
+     * The Monsters associated with this tower.
+     */
+    private Monsters monsters;
+
+    /**
+     * The x-coordinate of the tower's position.
+     */
+    private int x;
+
+    /**
+     * The y-coordinate of the tower's position.
+     */
+    private int y;
+
+    /**
+     * The speed of the tower's attacks or actions.
+     */
+    private int speed;
+
+    /**
+     * The power or damage inflicted by the tower's attacks.
+     */
+    private double power;
+
+    /**
+     * A flag to indicate if the tower's actions are completed or done.
+     */
+    private boolean done;
+    /**
+     * Constructs a Fireballs object with the specified position, power, and associated Monsters.
+     * @param x The x-coordinate of the Fireballs' position.
+     * @param y The y-coordinate of the Fireballs' position.
+     * @param power The power or damage inflicted by the Fireballs.
+     * @param monsters The Monsters associated with the Fireballs.
+     */
+<span class="fc" id="L40">    public Fireballs(int x, int y, double power, Monsters monsters) {</span>
+<span class="fc" id="L41">        this.x = x;</span>
+<span class="fc" id="L42">        this.y = y;</span>
+<span class="fc" id="L43">        this.power = power;</span>
+<span class="fc" id="L44">        this.monsters = monsters;</span>
+<span class="fc" id="L45">        this.done = false;</span>
+<span class="fc" id="L46">        this.speed=5;</span>
+<span class="fc" id="L47">    }</span>
+    /**
+     * Moves the Fireballs, tracking Monsters if they are within proximity and inflicting damage.
+     * @param accelerate A boolean flag indicating whether to accelerate the Fireballs' movement.
+     */
+    public void move(boolean accelerate) {
+<span class="fc bfc" id="L53" title="All 2 branches covered.">        if (done) {</span>
+<span class="fc" id="L54">            return;</span>
+        }
+<span class="fc" id="L56">        int targetX = monsters.getx()+6;</span>
+<span class="fc" id="L57">        int targetY = monsters.gety()+6;</span>
+<span class="fc" id="L58">        double armour = monsters.getArmour();</span>
+<span class="pc bpc" id="L59" title="1 of 8 branches missed.">        if (this.x &gt; targetX - 3 &amp;&amp; this.x &lt; targetX + 3 &amp;&amp; this.y &gt; targetY - 3 &amp;&amp; this.y &lt; targetY + 3) {</span>
+<span class="fc" id="L60">            monsters.setCurrenthp(monsters.getCurrenthp() - power * armour);</span>
+<span class="fc" id="L61">            this.done = true;</span>
+        } else {
+<span class="fc" id="L63">            double angle = Math.atan2(targetY - y, targetX - x);</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">            if (accelerate) {</span>
+<span class="fc" id="L65">                x += (int) (speed * Math.cos(angle) * 2);</span>
+<span class="fc" id="L66">                y += (int) (speed * Math.sin(angle) * 2);</span>
+            } else {
+<span class="fc" id="L68">                x += (int) (speed * Math.cos(angle));</span>
+<span class="fc" id="L69">                y += (int) (speed * Math.sin(angle));</span>
+            }
+        }
+<span class="pc bpc" id="L72" title="2 of 4 branches missed.">        if(targetX==0||targetY==0){</span>
+<span class="nc" id="L73">            this.done=true;</span>
+        }
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        if(monsters.getisdead()){</span>
+<span class="fc" id="L76">            this.done=true;</span>
+        }
+<span class="fc" id="L78">    }</span>
+    /**
+     * Gets the X-coordinate of the Fireballs' current position.
+     * @return The X-coordinate of the Fireballs.
+     */
+    public int getX() {
+<span class="fc" id="L84">        return x;</span>
+    }
+
+    /**
+     * Gets the Y-coordinate of the Fireballs' current position.
+     * @return The Y-coordinate of the Fireballs.
+     */
+    public int getY() {
+<span class="fc" id="L92">        return y;</span>
+    }
+
+    /**
+     * Checks whether the Fireballs have completed their movement and achieved their purpose.
+     * @return `true` if the Fireballs are done; otherwise, `false`.
+     */
+    public boolean getisdone() {
+<span class="fc" id="L100">        return done;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>

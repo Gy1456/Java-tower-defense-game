@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PauseUI.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">scaffold</a> &gt; <a href="index.source.html" class="el_package">WizardTD.UiObject</a> &gt; <span class="el_source">PauseUI.java</span></div><h1>PauseUI.java</h1><pre class="source lang-java linenums">package WizardTD.UiObject;
+
+public class PauseUI extends UI{
+
+    public PauseUI(){
+<span class="fc" id="L6">        super(650,120);</span>
+<span class="fc" id="L7">    }</span>
+    /**
+     * Checks whether the specified coordinates are contained within the element.
+     * @param mouseX The x-coordinate to check.
+     * @param mouseY The y-coordinate to check.
+     */
+    public void contain(int mouseX, int mouseY) {
+<span class="pc bpc" id="L14" title="3 of 8 branches missed.">        if (mouseX &gt;= x &amp;&amp; mouseX &lt;= x + width &amp;&amp; mouseY &gt;= y &amp;&amp; mouseY &lt;= y + width) {</span>
+<span class="fc" id="L15">            this.contain = true;</span>
+        } else {
+<span class="fc" id="L17">            this.contain = false;</span>
+        }
+<span class="fc" id="L19">    }</span>
+    /**
+     * Gets the x-coordinate of the element.
+     * @return The x-coordinate.
+     */
+    public int getx() {
+<span class="fc" id="L25">        return x;</span>
+    }
+    /**
+     * Gets the y-coordinate of the element.
+     * @return The y-coordinate.
+     */
+    public int gety() {
+<span class="fc" id="L32">        return y;</span>
+    }
+    /**
+     * Gets the width of the element.
+     * @return The width.
+     */
+    public int getwidth() {
+<span class="fc" id="L39">        return width;</span>
+    }
+    /**
+     * Gets the height of the element.
+     * @return The height.
+     */
+    public int getheight() {
+<span class="fc" id="L46">        return height;</span>
+    }
+    /**
+     * Checks whether a point is contained within the element.
+     * @return {@code true} if the point is contained, {@code false} otherwise.
+     */
+    public boolean getcotain() {
+<span class="fc" id="L53">        return contain;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>

@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Mana.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">scaffold</a> &gt; <a href="index.source.html" class="el_package">WizardTD.MODEL</a> &gt; <span class="el_source">Mana.java</span></div><h1>Mana.java</h1><pre class="source lang-java linenums">package WizardTD.MODEL;
+
+import WizardTD.App;
+import WizardTD.Gamebase.GameSet;
+
+import javax.sound.sampled.Clip;
+import java.util.HashMap;
+
+public class Mana {
+    /**
+     * Manages the mana resource in the game.
+     */
+    private double initial_mana;
+    /**
+     * The current amount of mana available.
+     */
+    private double currentmana;
+    /**
+     * The initial mana capacity.
+     */
+    private double initial_mana_cap;
+    /**
+     * The initial mana gained per second.
+     */
+    private double initial_mana_gained_per_second;
+    /**
+     * The initial cost of the mana pool spell.
+     */
+    private double mana_pool_spell_initial_cost;
+    /**
+     * The cost increase per use of the mana pool spell.
+     */
+    private double mana_pool_spell_cost_increase_per_use;
+
+    /**
+     * The multiplier for mana pool spell capacity.
+     */
+    private double mana_pool_spell_cap_multiplier;
+
+    /**
+     * The multiplier for mana gained through the mana pool spell.
+     */
+    private double mana_pool_spell_mana_gained_multiplier;
+
+    /**
+     * The X-coordinate of the mana object.
+     */
+    private final int x;
+
+    /**
+     * The Y-coordinate of the mana object.
+     */
+    private final int y;
+
+    /**
+     * The width of the mana object.
+     */
+    private final int width;
+
+    /**
+     * The height of the mana object.
+     */
+    private final int height;
+
+    /**
+     * Used to control the time it takes to obtain mana points per second
+     */
+    private int time;
+    /**
+     * Object used to control game state
+     */
+    private GameSet set;
+    /**
+     * The constructer of mana object
+     * @param initial_mana The initial amount of mana.
+     * @param initial_mana_cap The initial mana capacity.
+     * @param initial_mana_gained_per_second The initial rate of mana gained per second.
+     * @param mana_pool_spell_initial_cost The initial cost of the mana pool spell.
+     * @param mana_pool_spell_cost_increase_per_use The cost increase per use of the mana pool spell.
+     * @param mana_pool_spell_cap_multiplier The multiplier for the mana pool spell capacity.
+     * @param mana_pool_spell_mana_gained_multiplier The multiplier for mana gained through the mana pool spell.
+     * @param set The GameSet to which this mana object belongs.
+     */
+    public Mana(double initial_mana,double initial_mana_cap,double initial_mana_gained_per_second,
+                double mana_pool_spell_initial_cost,double mana_pool_spell_cost_increase_per_use,
+                double mana_pool_spell_cap_multiplier,double mana_pool_spell_mana_gained_multiplier,GameSet set
+<span class="fc" id="L87">               ){</span>
+<span class="fc" id="L88">        this.initial_mana=initial_mana;</span>
+<span class="fc" id="L89">        this.initial_mana_cap=initial_mana_cap;</span>
+<span class="fc" id="L90">        this.initial_mana_gained_per_second=initial_mana_gained_per_second;</span>
+<span class="fc" id="L91">        this.mana_pool_spell_initial_cost=mana_pool_spell_initial_cost;</span>
+<span class="fc" id="L92">        this.mana_pool_spell_cost_increase_per_use=mana_pool_spell_cost_increase_per_use;</span>
+<span class="fc" id="L93">        this.mana_pool_spell_cap_multiplier=mana_pool_spell_cap_multiplier;</span>
+<span class="fc" id="L94">        this.mana_pool_spell_mana_gained_multiplier=mana_pool_spell_mana_gained_multiplier;</span>
+<span class="fc" id="L95">        this.currentmana=initial_mana;</span>
+<span class="fc" id="L96">        this.x=330;</span>
+<span class="fc" id="L97">        this.y=10;</span>
+<span class="fc" id="L98">        this.width=370;</span>
+<span class="fc" id="L99">        this.height=20;</span>
+<span class="fc" id="L100">        this.set=set;</span>
+<span class="fc" id="L101">        this.time=0;</span>
+<span class="fc" id="L102">    }</span>
+    /**
+     * Spell mana, used to expand the mana cap
+     */
+    public void manaspell(){
+<span class="fc bfc" id="L107" title="All 2 branches covered.">        if(currentmana-mana_pool_spell_initial_cost&gt;0){</span>
+<span class="fc" id="L108">            this.currentmana=currentmana-mana_pool_spell_initial_cost;</span>
+<span class="fc" id="L109">            this.initial_mana_cap=initial_mana_cap*mana_pool_spell_cap_multiplier;</span>
+<span class="fc" id="L110">            this.initial_mana_gained_per_second=initial_mana_gained_per_second*mana_pool_spell_mana_gained_multiplier;</span>
+<span class="fc" id="L111">            this.mana_pool_spell_mana_gained_multiplier=mana_pool_spell_mana_gained_multiplier+0.1;</span>
+<span class="fc" id="L112">            this.mana_pool_spell_initial_cost=mana_pool_spell_initial_cost+mana_pool_spell_cost_increase_per_use;</span>
+<span class="fc" id="L113">            set.playsound(&quot;mana&quot;);</span>
+        }
+        else{
+<span class="fc" id="L116">            set.playsound(&quot;failto&quot;);</span>
+        }
+<span class="fc" id="L118">    }</span>
+    /**
+     * Used to obtain mana obtained by killing monsters
+     * @param mana The amount of mana gained from defeating monsters
+     */
+    public void gainmama(double mana){
+<span class="fc bfc" id="L124" title="All 2 branches covered.">        if(this.currentmana+mana*mana_pool_spell_mana_gained_multiplier&gt;=initial_mana_cap){</span>
+<span class="fc" id="L125">            this.currentmana=initial_mana_cap;</span>
+        }
+        else{
+<span class="fc" id="L128">            this.currentmana=currentmana+(mana*mana_pool_spell_mana_gained_multiplier);</span>
+        }
+<span class="fc" id="L130">    }</span>
+    /**
+     * Used to obtain mana per second
+     */
+    public void gianmanapersecond(){
+<span class="fc" id="L135">        time++;</span>
+<span class="fc bfc" id="L136" title="All 6 branches covered.">        if(!(set.isGamepause()||set.isGamelose()||set.isGamewin())) {</span>
+<span class="pc bpc" id="L137" title="1 of 2 branches missed.">            if (set.isGameaccelerate()) {</span>
+<span class="nc" id="L138">                time++;</span>
+            }
+<span class="fc bfc" id="L140" title="All 2 branches covered.">        if (this.currentmana + initial_mana_gained_per_second * mana_pool_spell_mana_gained_multiplier &gt;= initial_mana_cap) {</span>
+<span class="fc" id="L141">            this.currentmana = initial_mana_cap;</span>
+        } else {
+<span class="fc bfc" id="L143" title="All 2 branches covered.">                if (time &gt; App.FPS) {</span>
+<span class="fc" id="L144">                    this.time = 0;</span>
+<span class="fc" id="L145">                    this.currentmana = (currentmana + (initial_mana_gained_per_second *</span>
+                            mana_pool_spell_mana_gained_multiplier));
+                }
+            }
+        }
+<span class="fc" id="L150">    }</span>
+    /**
+     * Monsters being exiled and upgraded, building towers, and extending mana caps all require mana
+     * @param currenthp The amount of mana to be spent for the action.
+     */
+    public void spendmana(double currenthp){
+<span class="fc" id="L156">        System.out.println(currentmana);</span>
+<span class="fc" id="L157">        this.currentmana=currentmana-currenthp;</span>
+<span class="fc" id="L158">    }</span>
+    /**
+     * Set the current mana value for testing
+     * @param mana The mana value to set for testing.
+     */
+    public void setcurrentmana(double mana){
+<span class="fc" id="L164">        this.currentmana=mana;</span>
+<span class="fc" id="L165">    }</span>
+    /**
+     * If the mana less than 0,the game will lose
+     */
+    public void lostgame(){
+<span class="fc bfc" id="L170" title="All 2 branches covered.">        if(currentmana&lt;0){</span>
+<span class="fc" id="L171">            System.out.println(currentmana);</span>
+<span class="fc" id="L172">            set.losegame();</span>
+        }
+<span class="fc" id="L174">    }</span>
+    /**
+     * Returns the initial mana value.
+     * @return The initial mana value representing the starting amount of mana.
+     */
+    public double getInitialMana() {
+<span class="fc" id="L180">        return initial_mana;</span>
+    }
+    /**
+     * Returns the rate at which mana is gained per second.
+     * @return The initial mana gained per second value.
+     */
+    public double getInitialManaGainedPerSecond() {
+<span class="fc" id="L187">        return initial_mana_gained_per_second;</span>
+    }
+    /**
+     * Returns the initial cost of the mana pool spell.
+     * @return The initial cost of the mana pool spell.
+     */
+    public double getManaPoolSpellInitialCost() {
+<span class="fc" id="L194">        return mana_pool_spell_initial_cost;</span>
+    }
+    /**
+     * Returns the increase in the cost of the mana pool spell per use.
+     * @return The cost increase of the mana pool spell per use.
+     */
+    public double getManaPoolSpellCostIncreasePerUse() {
+<span class="fc" id="L201">        return mana_pool_spell_cost_increase_per_use;</span>
+    }
+    /**
+     * Returns the multiplier for increasing the mana pool spell's cap.
+     * @return The multiplier used for increasing the mana pool spell's cap.
+     */
+    public double getManaPoolSpellCapMultiplier() {
+<span class="fc" id="L208">        return mana_pool_spell_cap_multiplier;</span>
+    }
+    /**
+     * Returns the multiplier for increasing the mana gained by the mana pool spell.
+     * @return The multiplier for increasing the mana gained by the mana pool spell.
+     */
+    public double getManaPoolSpellManaGainedMultiplier() {
+<span class="fc" id="L215">        return mana_pool_spell_mana_gained_multiplier;</span>
+    }
+    /**
+     * Returns the current cost of the mana pool spell.
+     * @return The current cost of the mana pool spell.
+     */
+    public double getMana_pool_spell_initial_cost() {
+<span class="fc" id="L222">        return mana_pool_spell_initial_cost;</span>
+    }
+    /**
+     * Returns the current mana cap.
+     * @return The current mana cap value.
+     */
+    public double getInitial_mana_cap() {
+<span class="fc" id="L229">        return initial_mana_cap;</span>
+    }
+    /**
+     * Returns the x-coordinate of the mana bar's position.
+     * @return The x-coordinate of the mana bar's position on the screen.
+     */
+    public int getx() {
+<span class="fc" id="L236">        return x;</span>
+    }
+    /**
+     * Returns the y-coordinate of the mana bar's position.
+     * @return The y-coordinate of the mana bar's position on the screen.
+     */
+    public int gety() {
+<span class="fc" id="L243">        return y;</span>
+    }
+    /**
+     * Returns the width of the mana bar.
+     * @return The width of the mana bar.
+     */
+    public int getWidth() {
+<span class="fc" id="L250">        return width;</span>
+    }
+    /**
+     * Returns the height of the mana bar.
+     * @return The height of the mana bar.
+     */
+    public int getHeight() {
+<span class="fc" id="L257">        return height;</span>
+    }
+    /**
+     * Returns the current mana level.
+     * @return The current mana level, representing the amount of mana available.
+     */
+    public double getCurrentmana() {
+<span class="fc" id="L264">        return currentmana;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>

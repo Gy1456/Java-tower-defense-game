@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Drawfireballs.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">scaffold</a> &gt; <a href="index.source.html" class="el_package">WizardTD.DrawTool</a> &gt; <span class="el_source">Drawfireballs.java</span></div><h1>Drawfireballs.java</h1><pre class="source lang-java linenums">package WizardTD.DrawTool;
+
+import WizardTD.Gamebase.GameSet;
+import WizardTD.MODEL.Board;
+import processing.core.PApplet;
+import processing.core.PImage;
+
+import java.awt.*;
+import java.util.HashMap;
+public class Drawfireballs extends DrawTool{
+    /**
+     * Represents the game board where fireballs are drawn.
+     */
+    private Board board;
+    /**
+     * Represents the image used for rendering fireballs.
+     */
+    private PImage pImage;
+    /**
+     * Represents the game settings for controlling fireball drawing behavior.
+     */
+    private GameSet set;
+    /**
+     *The constructor Drawfireballs of  A class responsible for drawing fireballs on the game board.
+     * @param board The game board on which the fireballs will be drawn.
+     * @param maps A collection of image resources, including the fireball image.
+     * @param set The game settings that control the drawing behavior.
+     */
+    public Drawfireballs(Board board,HashMap&lt;String, PImage&gt; maps,GameSet set){
+<span class="fc" id="L30">        super(maps);</span>
+<span class="fc" id="L31">        this.board=board;</span>
+<span class="fc" id="L32">        this.set=set;</span>
+<span class="fc" id="L33">    }</span>
+    /**
+     * Draws fireballs on the game board using the provided PApplet.
+     * @param app The PApplet instance used for rendering.
+     */
+    public void draw(PApplet app){
+<span class="fc" id="L39">        this.pImage=maps.get(&quot;fireball&quot;);</span>
+<span class="fc bfc" id="L40" title="All 2 branches covered.">        for(int i=0;i&lt;board.getTowers().size();i++){</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">            for(int j=0;j&lt;board.getTowers().get(i).getFireballslist().size();j++){</span>
+<span class="pc bpc" id="L42" title="1 of 4 branches missed.">                if(!(set.isGamepause()||set.isGamelose())){</span>
+<span class="fc" id="L43">                    app.image(pImage,board.getTowers().get(i).getFireballslist().get(j).getX(),</span>
+<span class="fc" id="L44">                            board.getTowers().get(i).getFireballslist().get(j).getY());</span>
+<span class="fc" id="L45">                    board.getTowers().get(i).getFireballslist().get(j).move(set.isGameaccelerate());</span>
+                }
+                else{
+<span class="fc" id="L48">                    app.image(pImage,board.getTowers().get(i).getFireballslist().get(j).getX(),</span>
+<span class="fc" id="L49">                            board.getTowers().get(i).getFireballslist().get(j).getY());</span>
+                }
+
+            }
+        }
+<span class="fc" id="L54">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>

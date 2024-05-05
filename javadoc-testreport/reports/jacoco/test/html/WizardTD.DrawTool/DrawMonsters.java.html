@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DrawMonsters.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">scaffold</a> &gt; <a href="index.source.html" class="el_package">WizardTD.DrawTool</a> &gt; <span class="el_source">DrawMonsters.java</span></div><h1>DrawMonsters.java</h1><pre class="source lang-java linenums">package WizardTD.DrawTool;
+import WizardTD.App;
+import WizardTD.Gamebase.GameSet;
+import WizardTD.MODEL.*;
+import processing.core.PImage;
+import processing.core.PApplet;
+import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import WizardTD.Wavemanage.*;
+public class DrawMonsters extends DrawTool{
+    /**
+     * Represents the wave management for controlling monster behavior.
+     */
+    private Wavemangement wavemangement;
+
+    /**
+     * Represents the game settings for controlling drawing behavior.
+     */
+    private GameSet gameSet;
+
+    /**
+     * Represents the image used for rendering monster animations.
+     */
+    private PImage pimage;
+
+    /**
+     * Keeps track of dead monsters and their animation state.
+     */
+    private HashMap&lt;Monsters, Integer&gt; deadmonster;
+    /**
+     * The constructor DrawMonsters of ,Initializes a DrawMonsters object for drawing monsters and related elements.
+     * @param board        The game board for drawing monsters.
+     * @param maps         A HashMap of images used for rendering monsters and animations.
+     * @param wavemangement The wave management for controlling monster behavior.
+     * @param gameSet      The game settings for controlling drawing behavior.
+     */
+    public DrawMonsters(Board board,HashMap&lt;String, PImage&gt; maps,Wavemangement wavemangement,GameSet gameSet){
+<span class="fc" id="L40">        super(maps);</span>
+<span class="fc" id="L41">        this.wavemangement=wavemangement;</span>
+<span class="fc" id="L42">        this.gameSet=gameSet;</span>
+<span class="fc" id="L43">        this.deadmonster=new HashMap&lt;&gt;();</span>
+<span class="fc" id="L44">    }</span>
+    /**
+     * Draws the health bar for a monster at the specified location.
+     * @param app       The PApplet used for drawing.
+     * @param hp        The total health points of the monster.
+     * @param currenthp The current health points of the monster.
+     * @param x         The x-coordinate of the health bar.
+     * @param y         The y-coordinate of the health bar.
+     */
+    public void drawheathbar(PApplet app,double hp, double currenthp, int x, int y){
+<span class="fc" id="L54">        int originalFillColor = app.g.fillColor;</span>
+<span class="fc" id="L55">        float originalStrokeWeight = app.g.strokeWeight;</span>
+<span class="fc" id="L56">        x=x-5;</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">        if (currenthp &lt; 0) {</span>
+<span class="fc" id="L58">            currenthp = 0;</span>
+        }
+<span class="fc" id="L60">        float redLength =(float) ((hp- currenthp) / hp );</span>
+<span class="fc bfc" id="L61" title="All 2 branches covered.">        redLength = redLength &gt; 0 ? redLength : 0;</span>
+<span class="fc" id="L62">        app.fill(0, 255, 0);</span>
+<span class="fc" id="L63">        app.rect(x, y-5, 32, 5);</span>
+<span class="fc" id="L64">        app.fill(255, 0, 0);</span>
+<span class="fc" id="L65">        app.rect(x+32- (int)(32 * redLength), y-5, (int)(32 * redLength), 5);</span>
+<span class="fc" id="L66">        app.fill(originalFillColor);</span>
+<span class="fc" id="L67">        app.strokeWeight(originalStrokeWeight);</span>
+<span class="fc" id="L68">    }</span>
+    /**
+     * Draws death animations for monsters whose animation is in progress.
+     * @param app         The PApplet used for drawing.
+     * @param deadmonster A HashMap of dead monsters and their animation state.
+     */
+    public void drawdeadmonster(PApplet app, HashMap&lt;Monsters, Integer&gt; deadmonster) {
+<span class="fc" id="L75">        Iterator&lt;HashMap.Entry&lt;Monsters, Integer&gt;&gt; iterator = deadmonster.entrySet().iterator();</span>
+<span class="fc bfc" id="L76" title="All 2 branches covered.">        while (iterator.hasNext()) {</span>
+<span class="fc" id="L77">            HashMap.Entry&lt;Monsters, Integer&gt; entry = iterator.next();</span>
+<span class="fc" id="L78">            Monsters monsters = entry.getKey();</span>
+<span class="fc" id="L79">            int count = entry.getValue();</span>
+<span class="pc bpc" id="L80" title="1 of 4 branches missed.">            if (count &gt;= 0 &amp;&amp; count &lt; 4) {</span>
+<span class="fc" id="L81">                this.pimage = maps.get(&quot;gremlin1&quot;);</span>
+<span class="fc" id="L82">                app.image(pimage, monsters.getx(), monsters.gety());</span>
+<span class="fc" id="L83">                entry.setValue(count + 1);</span>
+<span class="pc bpc" id="L84" title="1 of 4 branches missed.">            } else if (count &gt;= 4 &amp;&amp; count &lt; 8) {</span>
+<span class="fc" id="L85">                this.pimage = maps.get(&quot;gremlin2&quot;);</span>
+<span class="fc" id="L86">                app.image(pimage, monsters.getx(), monsters.gety());</span>
+<span class="fc" id="L87">                entry.setValue(count + 1);</span>
+<span class="pc bpc" id="L88" title="1 of 4 branches missed.">            } else if (count &gt;= 8 &amp;&amp; count &lt; 12) {</span>
+<span class="fc" id="L89">                this.pimage = maps.get(&quot;gremlin3&quot;);</span>
+<span class="fc" id="L90">                app.image(pimage, monsters.getx(), monsters.gety());</span>
+<span class="fc" id="L91">                entry.setValue(count + 1);</span>
+<span class="pc bpc" id="L92" title="1 of 4 branches missed.">            } else if (count &gt;= 12 &amp;&amp; count &lt; 16) {</span>
+<span class="fc" id="L93">                this.pimage = maps.get(&quot;gremlin4&quot;);</span>
+<span class="fc" id="L94">                app.image(pimage, monsters.getx(), monsters.gety());</span>
+<span class="fc" id="L95">                entry.setValue(count + 1);</span>
+<span class="pc bpc" id="L96" title="1 of 4 branches missed.">            } else if (count &gt;= 16 &amp;&amp; count &lt; 20) {</span>
+<span class="fc" id="L97">                this.pimage = maps.get(&quot;gremlin5&quot;);</span>
+<span class="fc" id="L98">                app.image(pimage, monsters.getx(), monsters.gety());</span>
+<span class="fc" id="L99">                entry.setValue(count + 1);</span>
+<span class="pc bpc" id="L100" title="1 of 2 branches missed.">            } else if (count &gt;= 20) {</span>
+<span class="fc" id="L101">                iterator.remove();</span>
+            }
+<span class="fc" id="L103">        }</span>
+<span class="fc" id="L104">    }</span>
+    /**
+     * Draws the overall behavior of monsters, including movement, health bars, and animations.
+     * @param app The PApplet used for drawing.
+     */
+    public void draw(PApplet app){
+<span class="fc bfc" id="L110" title="All 4 branches covered.">        if(!(gameSet.isGamepause()||gameSet.isGamelose())){</span>
+<span class="fc" id="L111">            wavemangement.releasemonster();</span>
+<span class="fc" id="L112">            wavemangement.timing();</span>
+<span class="fc bfc" id="L113" title="All 2 branches covered.">                for(int i=0;i&lt;wavemangement.getCurrentmonster().size();i++){</span>
+<span class="fc bfc" id="L114" title="All 2 branches covered.">                    if(wavemangement.getCurrentmonster().get(i).getisdead()){</span>
+<span class="fc" id="L115">                        deadmonster.put(wavemangement.getCurrentmonster().get(i),0);</span>
+<span class="fc" id="L116">                        wavemangement.getCurrentmonster().remove(i);</span>
+                    }
+                    else {
+<span class="fc" id="L119">                        wavemangement.getCurrentmonster().get(i).move(gameSet.isGameaccelerate());</span>
+<span class="fc" id="L120">                        wavemangement.getCurrentmonster().get(i).isbanished();</span>
+<span class="fc" id="L121">                        this.pimage = maps.get(&quot;gremlin&quot;);</span>
+<span class="fc" id="L122">                        app.image(pimage, wavemangement.getCurrentmonster().get(i).getx(),</span>
+<span class="fc" id="L123">                                wavemangement.getCurrentmonster().get(i).gety());</span>
+<span class="fc" id="L124">                        wavemangement.getCurrentmonster().get(i).isdead();</span>
+<span class="fc" id="L125">                        drawheathbar(app,wavemangement.getCurrentmonster().get(i).getHp(),</span>
+<span class="fc" id="L126">                                wavemangement.getCurrentmonster().get(i).getCurrenthp(),</span>
+<span class="fc" id="L127">                                wavemangement.getCurrentmonster().get(i).getx(),</span>
+<span class="fc" id="L128">                                wavemangement.getCurrentmonster().get(i).gety());</span>
+                    }
+                }
+<span class="fc" id="L131">                drawdeadmonster(app,deadmonster);</span>
+            }
+        else{
+<span class="fc bfc" id="L134" title="All 2 branches covered.">            for(int i=0;i&lt;wavemangement.getCurrentmonster().size();i++){</span>
+<span class="fc" id="L135">                this.pimage = maps.get(&quot;gremlin&quot;);</span>
+<span class="fc" id="L136">                app.image(pimage, wavemangement.getCurrentmonster().get(i).getx(),</span>
+<span class="fc" id="L137">                        wavemangement.getCurrentmonster().get(i).gety());</span>
+<span class="pc bpc" id="L138" title="1 of 2 branches missed.">                if(wavemangement.getCurrentmonster().get(i).getCurrenthp()&lt;=0){</span>
+<span class="nc" id="L139">                    wavemangement.getCurrentmonster().get(i).isdead();</span>
+                }
+<span class="fc" id="L141">                drawheathbar(app,wavemangement.getCurrentmonster().get(i).getHp()</span>
+<span class="fc" id="L142">                        ,wavemangement.getCurrentmonster().get(i).getCurrenthp(),</span>
+<span class="fc" id="L143">                        wavemangement.getCurrentmonster().get(i).getx(),</span>
+<span class="fc" id="L144">                        wavemangement.getCurrentmonster().get(i).gety());</span>
+            }
+<span class="fc" id="L146">            drawdeadmonster(app,deadmonster);</span>
+        }
+<span class="fc" id="L148">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>

@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Monsters.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">scaffold</a> &gt; <a href="index.source.html" class="el_package">WizardTD.MODEL</a> &gt; <span class="el_source">Monsters.java</span></div><h1>Monsters.java</h1><pre class="source lang-java linenums">
+package WizardTD.MODEL;
+import java.awt.*;
+import java.util.Random;
+import WizardTD.Gamebase.GameSet;
+
+public class Monsters{
+    /**
+     * The type of monster.
+     */
+    private String type;
+
+    /**
+     * A random number generator for the monster's behavior.
+     */
+    private Random random;
+
+    /**
+     * The total health of the monster.
+     */
+    private double hp;
+
+    /**
+     * The current health of the monster.
+     */
+    private double currenthp;
+
+    /**
+     * The speed at which the monster moves on the map.
+     */
+    private double speed;
+
+    /**
+     * The armor (defense) value of the monster, reducing damage taken.
+     */
+    private double armour;
+
+    /**
+     * The amount of mana gained when this monster is killed.
+     */
+    private double mana_gained_on_kill;
+
+    /**
+     * A flag indicating whether the monster is dead.
+     */
+    private boolean isdead;
+
+    /**
+     * The mana object associated with the monster.
+     */
+    private Mana mana;
+
+    /**
+     * The x-coordinate position of the monster on the map.
+     */
+    private int x;
+
+    /**
+     * The y-coordinate position of the monster on the map.
+     */
+    private int y;
+
+    /**
+     * The direction in which the monster is moving,1 is left, 2 is right, 3 is up ,4 is down
+     */
+    private int direction;
+    /**
+     * The constructor of Monster class
+     * @param type The type of the monster.
+     * @param hp The  health of the monster.
+     * @param speed The speed at which the monster moves.
+     * @param armour The armor rating of the monster.
+     * @param mana_gained_on_kill The amount of mana gained when the monster is killed.
+     * @param mana The Mana object associated with the monster for mana management.
+     */
+<span class="fc" id="L76">    public Monsters (String type,double hp,double speed,double armour,double mana_gained_on_kill,Mana mana){</span>
+<span class="fc" id="L77">        this.type=type;</span>
+<span class="fc" id="L78">        this.hp=hp;</span>
+<span class="fc" id="L79">        this.speed=speed;</span>
+<span class="fc" id="L80">        this.armour=armour;</span>
+<span class="fc" id="L81">        this.mana_gained_on_kill=mana_gained_on_kill;</span>
+<span class="fc" id="L82">        this.currenthp=hp;</span>
+<span class="fc" id="L83">        this.isdead=false;</span>
+<span class="fc" id="L84">        this.mana=mana;</span>
+<span class="fc" id="L85">        this.random = new Random();</span>
+<span class="fc" id="L86">        int randomInt = random.nextInt(2);</span>
+<span class="fc bfc" id="L87" title="All 2 branches covered.">        if (randomInt == 0) {</span>
+<span class="fc" id="L88">            x = 0;</span>
+<span class="fc" id="L89">            y = 136;</span>
+        } else {
+<span class="fc" id="L91">            x = 295;</span>
+<span class="fc" id="L92">            y = 40;</span>
+        }
+<span class="fc" id="L94">    }</span>
+    /**
+     * Moves the object along the defined path based on its current direction and speed.
+     * @param isGameaccelerate If true, the game is in accelerated mode; otherwise, normal speed is applied.
+     */
+    public void move(boolean isGameaccelerate) {
+<span class="fc" id="L100">        findpath();</span>
+<span class="fc bfc" id="L101" title="All 2 branches covered.">        if(isGameaccelerate){</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">            if (direction == 1) {</span>
+<span class="fc" id="L103">                this.x -= speed*2;</span>
+            }
+<span class="fc bfc" id="L105" title="All 2 branches covered.">            if (direction == 2) {</span>
+<span class="fc" id="L106">                this.x += speed*2;</span>
+            }
+<span class="pc bpc" id="L108" title="1 of 2 branches missed.">            if (direction == 3) {</span>
+<span class="nc" id="L109">                this.y -= speed*2;</span>
+            }
+<span class="fc bfc" id="L111" title="All 2 branches covered.">            if (direction == 4) {</span>
+<span class="fc" id="L112">                this.y += speed*2;</span>
+            }
+        }
+        else{
+<span class="fc bfc" id="L116" title="All 2 branches covered.">            if (direction == 1) {</span>
+<span class="fc" id="L117">                this.x -= speed;</span>
+            }
+<span class="fc bfc" id="L119" title="All 2 branches covered.">            if (direction == 2) {</span>
+<span class="fc" id="L120">                this.x += speed;</span>
+            }
+<span class="pc bpc" id="L122" title="1 of 2 branches missed.">            if (direction == 3) {</span>
+<span class="nc" id="L123">                this.y -= speed;</span>
+            }
+<span class="fc bfc" id="L125" title="All 2 branches covered.">            if (direction == 4) {</span>
+<span class="fc" id="L126">                this.y += speed;</span>
+            }
+        }
+<span class="fc" id="L129">    }</span>
+    /**
+     *Control the monster's pathfinding so that it can walk along the path to the Wizard
+     */
+    public void findpath() {
+<span class="pc bpc" id="L134" title="1 of 4 branches missed.">            if (x&gt;=0&amp;&amp;x&lt;5) {</span>
+<span class="fc" id="L135">                setDirection(2);</span>
+            }
+<span class="pc bpc" id="L137" title="1 of 4 branches missed.">            else if (y&gt;=40&amp;&amp;y&lt;45) {</span>
+<span class="fc" id="L138">                setDirection(4);</span>
+            }
+<span class="pc bpc" id="L140" title="1 of 8 branches missed.">            else if ((x&lt;141&amp;&amp;x&gt;131)&amp;&amp;(y&lt;141&amp;&amp;y&gt;131)) {</span>
+<span class="fc" id="L141">               setDirection(4);</span>
+            }
+<span class="fc bfc" id="L143" title="All 8 branches covered.">            else if((x&lt;141&amp;&amp;x&gt;131)&amp;&amp;(y&lt;210&amp;&amp;y&gt;200)){</span>
+<span class="fc" id="L144">                setDirection(2);</span>
+            }
+<span class="fc bfc" id="L146" title="All 8 branches covered.">            else if((x&lt;300&amp;&amp;x&gt;290)&amp;&amp;(y&lt;210&amp;&amp;y&gt;200)){</span>
+<span class="fc" id="L147">                setDirection(2);</span>
+            }
+<span class="pc bpc" id="L149" title="2 of 8 branches missed.">            else if((x&lt;527&amp;&amp;x&gt;517)&amp;&amp;(y&lt;210&amp;&amp;y&gt;200)){</span>
+<span class="fc" id="L150">                setDirection(4);</span>
+            }
+<span class="pc bpc" id="L152" title="2 of 8 branches missed.">            else if((x&lt;527&amp;&amp;x&gt;517)&amp;&amp;(y&lt;308&amp;&amp;y&gt;298)){</span>
+<span class="fc" id="L153">                setDirection(1);</span>
+            }
+<span class="fc bfc" id="L155" title="All 8 branches covered.">            else if((x&lt;327&amp;&amp;x&gt;317)&amp;&amp;(y&lt;308&amp;&amp;y&gt;298)){</span>
+<span class="fc" id="L156">                setDirection(4);</span>
+            }
+<span class="pc bpc" id="L158" title="1 of 8 branches missed.">            else if((x&lt;327&amp;&amp;x&gt;317)&amp;&amp;(y&lt;500&amp;&amp;y&gt;490)){</span>
+<span class="fc" id="L159">                setDirection(1);</span>
+            }
+<span class="fc" id="L161">    }</span>
+    /**
+     *Banish the monster, deduct mana points, and return it to its origin
+     */
+    public void isbanished(){
+<span class="pc bpc" id="L166" title="1 of 8 branches missed.">        if((x&lt;133&amp;&amp;x&gt;123)&amp;&amp;(y&lt;500&amp;&amp;y&gt;490)){</span>
+<span class="fc" id="L167">            initiatelocation();</span>
+<span class="fc" id="L168">            mana.spendmana(currenthp);</span>
+<span class="fc" id="L169">            mana.lostgame();</span>
+        }
+<span class="fc" id="L171">    }</span>
+    /**
+     *Determine if the monster is dead
+     */
+    public void isdead(){
+<span class="fc bfc" id="L176" title="All 2 branches covered.">        if(currenthp&lt;=0){</span>
+<span class="fc" id="L177">            mana.gainmama(mana_gained_on_kill);</span>
+<span class="fc" id="L178">            this.isdead=true;</span>
+        }
+<span class="fc" id="L180">    }</span>
+    /**
+     * Gets the current status of whether the object is dead or alive.
+     * @return True if the object is dead, otherwise false.
+     */
+<span class="fc" id="L185">    public boolean getisdead(){return isdead;}</span>
+    /**
+     * Sets the direction of the object's movement.
+     * @param direction The new direction to set.
+     */
+    public void setDirection(int direction){
+<span class="fc" id="L191">        this.direction=direction;</span>
+<span class="fc" id="L192">    }</span>
+    /**
+     * Gets the current health points of the object.
+     * @return The current health points of the object.
+     */
+<span class="fc" id="L197">    public double getCurrenthp(){return currenthp;}</span>
+    /**
+     * Sets the current health of the object.
+     * @param currenthp The new health points to set.
+     */
+    public void setCurrenthp(double currenthp){
+<span class="fc" id="L203">        this.currenthp=currenthp;</span>
+<span class="fc" id="L204">    }</span>
+    /**
+     * Initializes the location of the object based on a random selection.
+     */
+    public void initiatelocation(){
+<span class="fc" id="L209">        int randomInt = random.nextInt(2);</span>
+<span class="fc bfc" id="L210" title="All 2 branches covered.">        if (randomInt == 0) {</span>
+<span class="fc" id="L211">            this.x = 0;</span>
+<span class="fc" id="L212">            this.y = 136;</span>
+        } else {
+<span class="fc" id="L214">            this.x = 295;</span>
+<span class="fc" id="L215">            this.y = 40;</span>
+        }
+<span class="fc" id="L217">    }</span>
+    /**
+     * Calculates and returns the Euclidean distance between the object's current location and the specified coordinates.
+     * @param x The x-coordinate of the target location.
+     * @param y The y-coordinate of the target location.
+     * @return The Euclidean distance between the object and the specified coordinates.
+     */
+    public int getDistance(int x, int y) {
+<span class="fc" id="L225">        return (int) (Math.sqrt((this.x - x) * (this.x - x) + (this.y - y)</span>
+                * (this.y - y)));
+    }
+    /**
+     * Gets the current x-coordinate of the object.
+     * @return The current x-coordinate.
+     */
+    public int getx() {
+<span class="fc" id="L233">        return x;</span>
+    }
+    /**
+     * Gets the current y-coordinate of the object.
+     * @return The current y-coordinate.
+     */
+    public int gety() {
+<span class="fc" id="L240">        return y;</span>
+    }
+    /**
+     * Sets the x-coordinate of the object's location.
+     * @param x The new x-coordinate to set.
+     */
+    public void setX(int x) {
+<span class="fc" id="L247">        this.x = x;</span>
+<span class="fc" id="L248">    }</span>
+    /**
+     * Sets the y-coordinate of the object's location.
+     * @param y The new y-coordinate to set.
+     */
+    public void setY(int y) {
+<span class="fc" id="L254">        this.y = y;</span>
+<span class="fc" id="L255">    }</span>
+    /**
+     * Gets the type of the object.
+     * @return The type of the object.
+     */
+    public String getType() {
+<span class="fc" id="L261">        return type;</span>
+    }
+    /**
+     * Gets the maximum health points (HP) of the object.
+     * @return The maximum health points of the object.
+     */
+    public double getHp() {
+<span class="fc" id="L268">        return hp;</span>
+    }
+    /**
+     * Gets the speed of the object.
+     * @return The speed of the object.
+     */
+    public double getSpeed() {
+<span class="fc" id="L275">        return speed;</span>
+    }
+    /**
+     * Gets the armor value of the object.
+     * @return The armor value of the object.
+     */
+    public double getArmour() {
+<span class="fc" id="L282">        return armour;</span>
+    }
+    /**
+     * Gets the amount of mana gained when this object is killed.
+     * @return The amount of mana gained on killing this object.
+     */
+    public double getMana_gained_on_kill() {
+<span class="fc" id="L289">        return mana_gained_on_kill;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>

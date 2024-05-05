@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Drawwave.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">scaffold</a> &gt; <a href="index.source.html" class="el_package">WizardTD.DrawTool</a> &gt; <span class="el_source">Drawwave.java</span></div><h1>Drawwave.java</h1><pre class="source lang-java linenums">package WizardTD.DrawTool;
+
+import WizardTD.App;
+import WizardTD.Gamebase.GameSet;
+import WizardTD.MODEL.Mana;
+import WizardTD.Wavemanage.Wavemangement;
+import processing.core.PApplet;
+import processing.core.PImage;
+
+import java.util.HashMap;
+
+public class Drawwave extends DrawTool{
+
+    /**
+     * The wave management system responsible for handling waves.
+     */
+    private Wavemangement wavemangement;
+
+    /**
+     * The game settings that store game-related information.
+     */
+    private GameSet gameSet;
+    /**
+     * The images and textures used for drawing elements on the screen.
+     */
+    private HashMap&lt;String, PImage&gt; maps;
+    /**
+     * The mana management system for tracking mana resources.
+     */
+    private Mana mana;
+    /**
+     * The constructor Drawwave,Creates a Drawwave object for displaying wave-related information.
+     * @param wavemangement The wave management system.
+     * @param gameSet       The game settings.
+     * @param maps          The images and textures.
+     * @param mana          The mana management system.
+     */
+    public Drawwave(Wavemangement wavemangement,GameSet gameSet,HashMap&lt;String, PImage&gt; maps,Mana mana){
+<span class="fc" id="L39">        super(maps);</span>
+<span class="fc" id="L40">        this.wavemangement=wavemangement;</span>
+<span class="fc" id="L41">        this.gameSet=gameSet;</span>
+<span class="fc" id="L42">        this.maps=maps;</span>
+<span class="fc" id="L43">        this.mana=mana;</span>
+<span class="fc" id="L44">    }</span>
+    /**
+     * Draws the current wave number and prepares the countdown for the next wave.
+     * @param app The main PApplet.
+     */
+    public void drawwave(PApplet app){
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        if(wavemangement.getnextWaveCountdown()&gt;=0){</span>
+<span class="fc" id="L51">            app.textSize(24);</span>
+<span class="fc" id="L52">            app.fill(0);</span>
+<span class="fc" id="L53">            app.text(&quot;Wave: &quot; + wavemangement.getnextwave(), 20, 30);</span>
+<span class="fc" id="L54">            app.textSize(24);</span>
+<span class="fc" id="L55">            app.fill(0);</span>
+<span class="fc" id="L56">            app.text(&quot;Starts: &quot; + (int)(wavemangement.getnextWaveCountdown()/ App.FPS), 120, 30);</span>
+        }
+<span class="fc" id="L58">    }</span>
+    /**
+     * Draws the current wave number and prepares the countdown for the next wave ,and whether the is win or lose.
+     *
+     * @param app The main PApplet.
+     */
+    public void draw(PApplet app){
+<span class="fc" id="L65">        wavemangement.gamejudeg();</span>
+<span class="fc bfc" id="L66" title="All 2 branches covered.">        if(gameSet.isGamewin()){</span>
+<span class="fc" id="L67">            app.textSize(70);</span>
+<span class="fc" id="L68">            app.fill(128, 0, 128);</span>
+<span class="fc" id="L69">            app.text(&quot;     You win\npress 'r' to restart&quot;, 100, 280);</span>
+        }
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        if(gameSet.isGamelose()){</span>
+<span class="fc" id="L72">            app.textSize(70);</span>
+<span class="fc" id="L73">            app.fill(128, 0, 128);</span>
+<span class="fc" id="L74">            app.text(&quot;     You Lost\npress 'r' to restart&quot;, 100, 280);</span>
+        }
+<span class="fc" id="L76">        drawwave(app);</span>
+<span class="fc" id="L77">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>

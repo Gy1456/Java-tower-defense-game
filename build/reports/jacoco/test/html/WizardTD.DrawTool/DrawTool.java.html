@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DrawTool.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">scaffold</a> &gt; <a href="index.source.html" class="el_package">WizardTD.DrawTool</a> &gt; <span class="el_source">DrawTool.java</span></div><h1>DrawTool.java</h1><pre class="source lang-java linenums">package WizardTD.DrawTool;
+
+import WizardTD.Gamebase.GameSet;
+import processing.core.PApplet;
+import processing.core.PImage;
+
+import java.applet.Applet;
+import java.util.HashMap;
+
+public abstract class DrawTool {
+    /**
+     * A HashMap of images used for rendering map elements.
+     */
+    protected HashMap&lt;String, PImage&gt; maps;
+    /**
+     * Initializes a DrawTool object with the provided image mappings.
+     * @param maps A HashMap of images used for rendering various elements.
+     */
+<span class="fc" id="L19">    public DrawTool(HashMap&lt;String, PImage&gt; maps){</span>
+<span class="fc" id="L20">        this.maps=maps;</span>
+
+<span class="fc" id="L22">    }</span>
+    /**
+     * Abstract method that must be implemented by subclasses to define the specific drawing behavior.
+     * @param app The PApplet used for drawing.
+     */
+    public abstract void draw(PApplet app);
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>

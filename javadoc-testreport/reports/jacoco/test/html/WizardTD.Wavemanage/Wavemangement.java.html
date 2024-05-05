@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Wavemangement.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">scaffold</a> &gt; <a href="index.source.html" class="el_package">WizardTD.Wavemanage</a> &gt; <span class="el_source">Wavemangement.java</span></div><h1>Wavemangement.java</h1><pre class="source lang-java linenums">package WizardTD.Wavemanage;
+import WizardTD.App;
+import WizardTD.Gamebase.GameSet;
+import WizardTD.MODEL.Mana;
+import WizardTD.MODEL.Monsters;
+import java.util.ArrayList;
+public class Wavemangement {
+    /**
+     * A list of waves, each containing a group of monsters.
+     */
+    private ArrayList&lt;Wave&gt; waves;
+
+    /**
+     * The current monsters in the game.
+     */
+    private ArrayList&lt;Monsters&gt; currentmonster;
+
+    /**
+     * The mana resource used to control the game.
+     */
+    private Mana mana;
+
+    /**
+     * The game settings.
+     */
+    private GameSet set;
+
+    /**
+     * An array of wave durations.
+     */
+    private int[] waves_duration;
+
+    /**
+     * An array of wave pre-wave pause durations.
+     */
+    private double[] waves_pre_wave_pause;
+
+    /**
+     * An array of monster types for each wave.
+     */
+    private String[] waves_pre_monsters_type;
+
+    /**
+     * An array of monster health points (hp) for each wave.
+     */
+    private double[] waves_pre_monsters_hp;
+
+    /**
+     * An array of monster speeds for each wave.
+     */
+    private int[] waves_pre_monsters_speed;
+
+    /**
+     * An array of monster armor values for each wave.
+     */
+    private double[] waves_pre_monsters_armour;
+
+    /**
+     * An array of mana gained on killing monsters for each wave.
+     */
+    private double[] waves_pre_monsters_mana_gained_on_kill;
+
+    /**
+     * An array of monster quantities for each wave.
+     */
+    private int[] waves_pre_monsters_quantity;
+
+    /**
+     * The total time elapsed.
+     */
+    private int totaltime;
+
+    /**
+     * The total time elapsed for a wave countdown.
+     */
+    private int totaltime2;
+
+    /**
+     * The duration of the wave preparation.
+     */
+    private int prepare;
+    /**
+     * The duration of the wave preparation for the next wave.
+     */
+    private int prepare2;
+    /**
+     * The duration of the wave preparation for the next wave.
+     */
+    private int prepare3;
+    /**
+     * The duration of the current wave.
+     */
+    private int duration;
+    /**
+     * The duration of the current wave for the next wave.
+     */
+    private int duration2;
+    /**
+     * Index for the current wave.
+     */
+    private int index1;
+    /**
+     * Index for the current monster in the wave.
+     */
+    private int index2;
+    /**
+     * A counter for controlling monster release.
+     */
+    private int index3;
+    /**
+     * Index for the next wave countdown.
+     */
+    private int index4;
+    /**
+     * Countdown for the next wave.
+     */
+    private int nextWaveCountdown;
+    /**
+     * The constructor of Wavemangement.
+     * @param waves_duration                 An array of wave durations in seconds.
+     * @param waves_pre_wave_pause           An array of pre-wave pause durations in seconds.
+     * @param waves_pre_monsters_type        An array of monster types for each wave.
+     * @param waves_pre_monsters_hp          An array of monster health points (hp) for each wave.
+     * @param waves_pre_monsters_speed       An array of monster speeds for each wave.
+     * @param waves_pre_monsters_armour      An array of monster armor values for each wave.
+     * @param waves_pre_monsters_mana_gained_on_kill An array of mana gained on killing monsters for each wave.
+     * @param waves_pre_monsters_quantity    An array of monster quantities for each wave.
+     * @param mana                           The mana resource used to control the game.
+     * @param set                            The game settings.
+     */
+    public Wavemangement(int[] waves_duration,double[] waves_pre_wave_pause,
+                         String[] waves_pre_monsters_type,double[] waves_pre_monsters_hp,
+                         int[] waves_pre_monsters_speed,double[] waves_pre_monsters_armour,
+                         double[] waves_pre_monsters_mana_gained_on_kill,int[] waves_pre_monsters_quantity,Mana mana,
+<span class="fc" id="L135">                         GameSet set){</span>
+<span class="fc" id="L136">        this.waves_duration=waves_duration;</span>
+<span class="fc" id="L137">        this.waves_pre_wave_pause=waves_pre_wave_pause;</span>
+<span class="fc" id="L138">        this.waves_pre_monsters_type=waves_pre_monsters_type;</span>
+<span class="fc" id="L139">        this.waves_pre_monsters_hp=waves_pre_monsters_hp;</span>
+<span class="fc" id="L140">        this.waves_pre_monsters_speed=waves_pre_monsters_speed;</span>
+<span class="fc" id="L141">        this.waves_pre_monsters_armour=waves_pre_monsters_armour;</span>
+<span class="fc" id="L142">        this.waves_pre_monsters_mana_gained_on_kill=waves_pre_monsters_mana_gained_on_kill;</span>
+<span class="fc" id="L143">        this.waves_pre_monsters_quantity=waves_pre_monsters_quantity;</span>
+<span class="fc" id="L144">        this.currentmonster=new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L145">        this.mana=mana;</span>
+<span class="fc" id="L146">        this.set=set;</span>
+<span class="fc" id="L147">        this.totaltime=0;</span>
+<span class="fc" id="L148">        this.totaltime2=0;</span>
+<span class="fc" id="L149">        this.index1=0;</span>
+<span class="fc" id="L150">        this.index2=0;</span>
+<span class="fc" id="L151">        this.index3=1;</span>
+<span class="fc" id="L152">        this.index4=0;</span>
+<span class="fc" id="L153">        this.nextWaveCountdown=0;</span>
+<span class="fc" id="L154">        this.waves=new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L155">    }</span>
+    /**
+     *Used to add wave numbers
+     */
+    public void addwave(){
+<span class="fc bfc" id="L160" title="All 2 branches covered.">        for(int i=0;i&lt;3;i++){</span>
+<span class="fc" id="L161">            Wave wave = new Wave(waves_pre_wave_pause[i], waves_duration[i], waves_pre_monsters_type[i],</span>
+                    waves_pre_monsters_hp[i], waves_pre_monsters_speed[i], waves_pre_monsters_armour[i],
+                    waves_pre_monsters_mana_gained_on_kill[i],waves_pre_monsters_quantity[i],mana);
+<span class="fc" id="L164">            waves.add(wave);</span>
+        }
+<span class="fc bfc" id="L166" title="All 2 branches covered.">        for(int i=0;i&lt;waves.size();i++)</span>
+        {
+<span class="fc" id="L168">            waves.get(i).addmonster();</span>
+        }
+<span class="fc" id="L170">    }</span>
+    /**
+     *Used to release monsters and control the time for releasing monsters
+     */
+    public void releasemonster() {
+        try {
+<span class="fc bfc" id="L176" title="All 2 branches covered.">            if (set.isGameaccelerate()) {</span>
+<span class="fc" id="L177">                this.totaltime += 2;</span>
+            } else {
+<span class="fc" id="L179">                this.totaltime++;</span>
+            }
+<span class="fc" id="L181">            prepare = (int) (waves.get(index1).getWaves_pre_wave_pause() * App.FPS);</span>
+<span class="fc" id="L182">            duration = (int) waves.get(index1).getWaves_duration() * App.FPS;</span>
+<span class="fc bfc" id="L183" title="All 2 branches covered.">            if (totaltime &lt; prepare) {</span>
+<span class="fc bfc" id="L184" title="All 2 branches covered.">            } else if ((totaltime - prepare) &gt;= (duration * index3 / (waves.get(index1).getWaves_pre_monsters_quantity()))) {</span>
+<span class="fc" id="L185">                currentmonster.add(waves.get(index1).getMonsters().get(index2));</span>
+<span class="fc" id="L186">                index2++;</span>
+<span class="fc" id="L187">                index3++;</span>
+<span class="fc bfc" id="L188" title="All 2 branches covered.">            } else if ((totaltime) &gt;= duration + prepare) {</span>
+<span class="fc" id="L189">                index1++;</span>
+<span class="fc" id="L190">                index2 = 0;</span>
+<span class="fc" id="L191">                index3 = 1;</span>
+<span class="fc" id="L192">                totaltime = 0;</span>
+            }
+<span class="fc" id="L194">        } catch (IndexOutOfBoundsException e) {}</span>
+<span class="fc" id="L195">    }</span>
+    /**
+     *Used to control the current wave number, as well as the duration and preparation time of the wave
+     */
+    public void timing(){
+        try {
+<span class="fc bfc" id="L201" title="All 2 branches covered.">            if (set.isGameaccelerate()) {</span>
+<span class="fc" id="L202">                this.totaltime2 += 2;</span>
+            } else {
+<span class="fc" id="L204">                this.totaltime2++;</span>
+            }
+<span class="fc" id="L206">            this.prepare2 = (int) (waves.get(index4).getWaves_pre_wave_pause() * App.FPS);</span>
+<span class="fc" id="L207">            this.duration2 = (int) waves.get(index4).getWaves_duration() * App.FPS;</span>
+<span class="fc bfc" id="L208" title="All 2 branches covered.">            if (index4 &lt; waves.size() - 1) {</span>
+<span class="fc" id="L209">                this.prepare3 = (int) waves.get(index4+1).getWaves_pre_wave_pause() * App.FPS;</span>
+<span class="fc" id="L210">                nextWaveCountdown = App.FPS+duration2 + prepare3-totaltime2;</span>
+<span class="fc bfc" id="L211" title="All 2 branches covered.">                if (totaltime2 &gt; prepare2 + duration2 + prepare3) {</span>
+<span class="fc" id="L212">                    index4++;</span>
+<span class="fc" id="L213">                    this.totaltime2=0;</span>
+                }
+            }
+        }
+<span class="pc" id="L217">        catch (IndexOutOfBoundsException e){}</span>
+<span class="fc" id="L218">    }</span>
+    /**
+     * Retrieves the index of the next wave.
+     * @return The index of the next wave.
+     */
+<span class="fc" id="L223">    public int getnextwave(){return index4+2;}</span>
+    /**
+     * Determines if the game is won or lost.
+     */
+    public void gamejudeg(){
+<span class="fc bfc" id="L228" title="All 4 branches covered.">        if(index1&gt;=waves.size()&amp;&amp;currentmonster.isEmpty()){</span>
+<span class="fc" id="L229">            set.wingame();</span>
+        }
+<span class="fc" id="L231">        mana.lostgame();</span>
+<span class="fc" id="L232">    }</span>
+    /**
+     * Retrieves the current wave index.
+     * @return The current wave index.
+     */
+<span class="fc" id="L237">    public int getIndex1(){return index1;}</span>
+    /**
+     * Retrieves the countdown for the next wave.
+     * @return The countdown for the next wave.
+     */
+<span class="fc" id="L242">    public int getnextWaveCountdown(){return nextWaveCountdown;}</span>
+    /**
+     * Retrieves the current monsters in the game.
+     * @return The current monsters in the game.
+     */
+<span class="fc" id="L247">    public ArrayList&lt;Monsters&gt; getCurrentmonster(){return currentmonster;}</span>
+    /**
+     * Retrieves the list of waves in the game.
+     * @return The list of waves in the game.
+     */
+<span class="fc" id="L252">    public ArrayList&lt;Wave&gt; getwave(){return  waves;}</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>

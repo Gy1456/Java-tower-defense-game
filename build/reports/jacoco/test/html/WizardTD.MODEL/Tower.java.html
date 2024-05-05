@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Tower.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">scaffold</a> &gt; <a href="index.source.html" class="el_package">WizardTD.MODEL</a> &gt; <span class="el_source">Tower.java</span></div><h1>Tower.java</h1><pre class="source lang-java linenums">package WizardTD.MODEL;
+
+import WizardTD.App;
+import WizardTD.Wavemanage.Wavemangement;
+import org.checkerframework.checker.units.qual.Speed;
+
+import javax.sound.sampled.Clip;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
+import java.util.Iterator;
+
+public class Tower {
+    /**
+     * The x-coordinate of the tower's position.
+     */
+    private int x;
+
+    /**
+     * The y-coordinate of the tower's position.
+     */
+    private int y;
+
+    /**
+     * The width of the tower.
+     */
+    private final int width;
+
+    /**
+     * The height of the tower.
+     */
+    private final int height;
+
+    /**
+     * The level of the tower's range upgrade.
+     */
+    private int Range_level;
+
+    /**
+     * The level of the tower's speed upgrade.
+     */
+    private int speed_level;
+
+    /**
+     * The level of the tower's power upgrade.
+     */
+    private int power_level;
+
+    /**
+     * The initial firing speed of the tower.
+     */
+    private double initial_tower_firing_speed;
+
+    /**
+     * The initial range of the tower.
+     */
+    private double initial_tower_range;
+
+    /**
+     * The initial damage of the tower.
+     */
+    private double initial_tower_damage;
+
+    /**
+     * The cost of building the tower.
+     */
+    private double tower_cost;
+
+    /**
+     * The cost of upgrading the tower's speed.
+     */
+    private double speedcost;
+
+    /**
+     * The cost of upgrading the tower's range.
+     */
+    private double rangecost;
+
+    /**
+     * The cost of upgrading the tower's damage.
+     */
+    private double damagecost;
+
+    /**
+     * The list of random monsters near the tower.
+     */
+    private ArrayList&lt;Monsters&gt; randonmonsters;
+
+    /**
+     * The list of fireballs fired by the tower.
+     */
+    private ArrayList&lt;Fireballs&gt; fireballslist;
+
+    /**
+     * A random number generator for tower behavior.
+     */
+<span class="fc" id="L97">    private Random random = new Random();</span>
+
+    /**
+     * The mana resource associated with the tower.
+     */
+    private Mana mana;
+
+    /**
+     * The in-game time associated with tower activities.
+     */
+    private int time;
+    /**
+     * The wave management system for controlling enemy waves.
+     */
+    private Wavemangement wavemangement;
+
+    /**
+     * The sound effects associated with the tower.
+     */
+    private HashMap&lt;String, Clip&gt; sound;
+    /**
+     * Constructs a new Tower object with the specified attributes.
+     * @param x The x-coordinate of the tower's position.
+     * @param y The y-coordinate of the tower's position.
+     * @param initial_tower_firing_speed The initial firing speed of the tower.
+     * @param initial_tower_range The initial range of the tower.
+     * @param initial_tower_damage The initial damage of the tower.
+     * @param tower_cost The cost of building the tower.
+     * @param mana The mana resource associated with the tower.
+     * @param wavemangement The wave management system for controlling enemy waves.
+     * @param sound The sound effects associated with the tower.
+     */
+    public Tower(int x, int y, double initial_tower_firing_speed, double initial_tower_range, double initial_tower_damage,
+<span class="fc" id="L130">                 double tower_cost, Mana mana, Wavemangement wavemangement,HashMap&lt;String,Clip&gt; sound) {</span>
+<span class="fc" id="L131">        this.x = x;</span>
+<span class="fc" id="L132">        this.y = y;</span>
+<span class="fc" id="L133">        this.width =32;</span>
+<span class="fc" id="L134">        this.height =32;</span>
+<span class="fc" id="L135">        this.Range_level =0;</span>
+<span class="fc" id="L136">        this.speed_level =0;</span>
+<span class="fc" id="L137">        this.power_level =0;</span>
+<span class="fc" id="L138">        this.initial_tower_firing_speed = initial_tower_firing_speed;</span>
+<span class="fc" id="L139">        this.initial_tower_range = initial_tower_range;</span>
+<span class="fc" id="L140">        this.initial_tower_damage = initial_tower_damage;</span>
+<span class="fc" id="L141">        this.tower_cost = tower_cost;</span>
+<span class="fc" id="L142">        this.speedcost =20;</span>
+<span class="fc" id="L143">        this.rangecost =20;</span>
+<span class="fc" id="L144">        this.damagecost =20;</span>
+<span class="fc" id="L145">        this.mana = mana;</span>
+<span class="fc" id="L146">        this.time=0;</span>
+<span class="fc" id="L147">        this.wavemangement=wavemangement;</span>
+<span class="fc" id="L148">        this.fireballslist=new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L149">        this.sound=sound;</span>
+<span class="fc" id="L150">    }</span>
+    /**
+     *Speed upgrade of tower
+     */
+    public void speed_level_up(){
+<span class="pc bpc" id="L155" title="1 of 2 branches missed.">        if(mana.getCurrentmana()-speedcost&gt;0){</span>
+<span class="fc" id="L156">            speed_level++;</span>
+<span class="fc" id="L157">            mana.spendmana(speedcost);</span>
+<span class="fc" id="L158">            speedcost=speedcost+10;</span>
+<span class="fc" id="L159">            initial_tower_firing_speed=initial_tower_firing_speed+0.5;</span>
+        }
+<span class="fc" id="L161">    }</span>
+    /**
+     *Damage upgrade of tower
+     */
+    public void damage_level_up(){
+<span class="pc bpc" id="L166" title="1 of 2 branches missed.">        if(mana.getCurrentmana()-damagecost&gt;0){</span>
+<span class="fc" id="L167">            power_level++;</span>
+<span class="fc" id="L168">            mana.spendmana(damagecost);</span>
+<span class="fc" id="L169">            damagecost=damagecost+10;</span>
+<span class="fc" id="L170">            initial_tower_damage=initial_tower_damage+20;</span>
+        }
+<span class="fc" id="L172">    }</span>
+    /**
+     *Range of tower
+     */
+    public void range_level_up(){
+<span class="pc bpc" id="L177" title="1 of 2 branches missed.">        if(mana.getCurrentmana()-rangecost&gt;0){</span>
+<span class="fc" id="L178">            Range_level++;</span>
+<span class="fc" id="L179">            mana.spendmana(rangecost);</span>
+<span class="fc" id="L180">            rangecost=rangecost+10;</span>
+<span class="fc" id="L181">            initial_tower_range=initial_tower_range+32;</span>
+        }
+<span class="fc" id="L183">    }</span>
+    /**
+     *Add monsters in range to the attack list
+     */
+    public void updaterandommonster () {
+<span class="fc" id="L188">            this.randonmonsters=new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L189" title="All 2 branches covered.">            if(!wavemangement.getCurrentmonster().isEmpty()){</span>
+<span class="fc bfc" id="L190" title="All 2 branches covered.">                for (Monsters monster : wavemangement.getCurrentmonster()) {</span>
+<span class="fc bfc" id="L191" title="All 2 branches covered.">                    if (monster.getDistance(x, y) &lt;= initial_tower_range) {</span>
+<span class="fc" id="L192">                        randonmonsters.add(monster);</span>
+                    }
+<span class="fc" id="L194">                }</span>
+        }
+<span class="fc" id="L196">    }</span>
+    /**
+     * Initiates an attack by the tower, randomly targeting monsters.
+     * The tower's attack speed is determined by its firing speed.
+     * @param accelerate If true, the attack is accelerated.
+     */
+    public void attack(boolean accelerate){
+<span class="fc bfc" id="L203" title="All 2 branches covered.">        if(accelerate){</span>
+<span class="fc" id="L204">            time++;</span>
+        }
+<span class="fc" id="L206">        time++;</span>
+<span class="fc bfc" id="L207" title="All 2 branches covered.">        if(time &gt;= (int)(App.FPS / initial_tower_firing_speed)) {</span>
+<span class="fc bfc" id="L208" title="All 2 branches covered.">            if (!randonmonsters.isEmpty()) {</span>
+<span class="fc" id="L209">                int randomInt = random.nextInt(randonmonsters.size());</span>
+<span class="fc" id="L210">                Fireballs fireballs = new Fireballs(x+10, y+10, initial_tower_damage, randonmonsters.get(randomInt));</span>
+<span class="fc" id="L211">                Clip soundClip = sound.get(&quot;fire&quot;);</span>
+<span class="pc bpc" id="L212" title="1 of 4 branches missed.">                if (soundClip != null &amp;&amp; !soundClip.isRunning()) {</span>
+<span class="fc" id="L213">                    soundClip.setFramePosition(0);</span>
+<span class="fc" id="L214">                    soundClip.start();</span>
+                }
+<span class="fc" id="L216">                fireballslist.add(fireballs);</span>
+            }
+<span class="fc" id="L218">                time = 0;</span>
+<span class="fc" id="L219">                Iterator&lt;Fireballs&gt; iterator = fireballslist.iterator();</span>
+<span class="fc bfc" id="L220" title="All 2 branches covered.">                while (iterator.hasNext()) {</span>
+<span class="fc" id="L221">                Fireballs fireball = iterator.next();</span>
+<span class="fc bfc" id="L222" title="All 2 branches covered.">                if (fireball.getisdone()) {</span>
+<span class="fc" id="L223">                    iterator.remove();</span>
+                }
+<span class="fc" id="L225">            }</span>
+        }
+<span class="fc" id="L227">    }</span>
+    /**
+     * Executes the tower's actions, including searching for nearby enemies and initiating attacks.
+     * @param accelerate If true, the tower's actions are accelerated.
+     */
+    public void toweraction(boolean accelerate){
+<span class="fc" id="L233">        updaterandommonster();</span>
+<span class="fc" id="L234">        attack(accelerate);</span>
+
+<span class="fc" id="L236">    }</span>
+    /**
+     * Determines if the current mana is sufficient to upgrade the tower's firing speed.
+     * @return True if mana is sufficient; otherwise, false.
+     */
+    public boolean allowupgratespeed(){
+<span class="fc bfc" id="L242" title="All 2 branches covered.">        if(mana.getCurrentmana()-speedcost&gt;0){</span>
+<span class="fc" id="L243">            return true;</span>
+        }
+<span class="fc" id="L245">        return  false;</span>
+    }
+    /**
+     * Determines if the current mana is sufficient to upgrade the tower's range.
+     * @return True if mana is sufficient; otherwise, false.
+     */
+    public boolean allowupgraterange(){
+<span class="fc bfc" id="L252" title="All 2 branches covered.">        if(mana.getCurrentmana()-rangecost&gt;0){</span>
+<span class="fc" id="L253">            return true;</span>
+        }
+<span class="fc" id="L255">        return  false;</span>
+    }
+    /**
+     * Determines if the current mana is sufficient to upgrade the tower's damage.
+     * @return True if mana is sufficient; otherwise, false.
+     */
+    public boolean allowupgratedamage(){
+<span class="fc bfc" id="L262" title="All 2 branches covered.">        if(mana.getCurrentmana()-rangecost&gt;0){</span>
+<span class="fc" id="L263">            return true;</span>
+        }
+<span class="fc" id="L265">        return  false;</span>
+    }
+    /**
+     * Gets the X-coordinate of the tower's position.
+     * @return The X-coordinate of the tower.
+     */
+    public int getX() {
+<span class="fc" id="L272">        return x;</span>
+    }
+
+    /**
+     * Gets the Y-coordinate of the tower's position.
+     * @return The Y-coordinate of the tower.
+     */
+    public int getY() {
+<span class="fc" id="L280">        return y;</span>
+    }
+
+    /**
+     * Gets the width of the tower.
+     * @return The width of the tower.
+     */
+    public int getWidth() {
+<span class="fc" id="L288">        return width;</span>
+    }
+
+    /**
+     * Gets the height of the tower.
+     * @return The height of the tower.
+     */
+    public int getHeight() {
+<span class="fc" id="L296">        return height;</span>
+    }
+
+    /**
+     * Gets the level of tower's range upgrade.
+     * @return The range level of the tower.
+     */
+    public int getRange_level() {
+<span class="fc" id="L304">        return Range_level;</span>
+    }
+
+    /**
+     * Gets the level of tower's speed upgrade.
+     * @return The speed level of the tower.
+     */
+    public int getSpeed_level() {
+<span class="fc" id="L312">        return speed_level;</span>
+    }
+
+    /**
+     * Gets the level of tower's power upgrade.
+     * @return The power level of the tower.
+     */
+    public int getPower_level() {
+<span class="fc" id="L320">        return power_level;</span>
+    }
+
+    /**
+     * Gets the cost of upgrading tower speed.
+     * @return The cost of upgrading tower speed.
+     */
+    public double getSpeedcost() {
+<span class="fc" id="L328">        return speedcost;</span>
+    }
+
+    /**
+     * Gets the cost of upgrading tower range.
+     * @return The cost of upgrading tower range.
+     */
+    public double getRangecost() {
+<span class="fc" id="L336">        return rangecost;</span>
+    }
+
+    /**
+     * Gets the cost of upgrading tower damage.
+     * @return The cost of upgrading tower damage.
+     */
+    public double getDamagecost() {
+<span class="fc" id="L344">        return damagecost;</span>
+    }
+
+    /**
+     * Gets the current range of the tower.
+     * @return The current range of the tower.
+     */
+    public double getrange() {
+<span class="fc" id="L352">        return initial_tower_range;</span>
+    }
+
+    /**
+     * Gets the current damage of the tower.
+     * @return The current damage of the tower.
+     */
+    public double getdamage() {
+<span class="fc" id="L360">        return initial_tower_damage;</span>
+    }
+
+    /**
+     * Gets the current firing speed of the tower.
+     * @return The current firing speed of the tower.
+     */
+    public double getspeed() {
+<span class="fc" id="L368">        return initial_tower_firing_speed;</span>
+    }
+
+    /**
+     * Gets the list of fireballs associated with the tower.
+     * @return The list of fireballs.
+     */
+    public ArrayList&lt;Fireballs&gt; getFireballslist() {
+<span class="fc" id="L376">        return fireballslist;</span>
+    }
+
+    /**
+     * Gets the list of monsters targeted by the tower.
+     * @return The list of monsters.
+     */
+    public ArrayList&lt;Monsters&gt; getRandonmonsters() {
+<span class="fc" id="L384">        return randonmonsters;</span>
+    }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>

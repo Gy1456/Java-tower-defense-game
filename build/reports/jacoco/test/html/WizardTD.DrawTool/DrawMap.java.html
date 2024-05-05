@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DrawMap.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">scaffold</a> &gt; <a href="index.source.html" class="el_package">WizardTD.DrawTool</a> &gt; <span class="el_source">DrawMap.java</span></div><h1>DrawMap.java</h1><pre class="source lang-java linenums">package WizardTD.DrawTool;
+import WizardTD.App;
+import WizardTD.Gamebase.GameSet;
+import WizardTD.MODEL.*;
+import processing.core.PImage;
+import processing.core.PApplet;
+
+import java.util.HashMap;
+
+public class DrawMap extends DrawTool{
+    /**
+     * Represents the game board for drawing maps and mana slots.
+     */
+    private Board boards;
+
+    /**
+     * Represents the image used for rendering map elements and the mana pool.
+     */
+    private PImage pimage;
+    /**
+     * Represents the game settings for controlling drawing behavior.
+     */
+    private GameSet set;
+    /**
+     * Represents the mana pool associated with the game.
+     */
+    private Mana mana;
+    /**
+     * Initializes a DrawMap object for drawing maps and mana slots.
+     * @param maps   A HashMap of images used for rendering map elements.
+     * @param boards The game board for drawing map elements.
+     * @param mana   The mana pool associated with the game.
+     * @param set    The game settings for controlling drawing behavior.
+     */
+    public DrawMap(HashMap&lt;String, PImage&gt; maps, Board boards, Mana mana, GameSet set){
+<span class="fc" id="L36">        super(maps);</span>
+<span class="fc" id="L37">        this.boards=boards;</span>
+<span class="fc" id="L38">        this.mana=mana;</span>
+<span class="fc" id="L39">        this.set=set;</span>
+<span class="fc" id="L40">    }</span>
+    /**
+     * Draws the mana pool, updates mana gain, and displays mana information on the screen.
+     * @param app The PApplet used for drawing.
+     */
+    public void drawmanapool(PApplet app){
+<span class="fc" id="L46">        mana.gianmanapersecond();</span>
+<span class="fc" id="L47">        app.fill(255);</span>
+<span class="fc" id="L48">        app.rect(mana.getx(), mana.gety(), mana.getWidth(), mana.getHeight());</span>
+<span class="fc" id="L49">        app.fill(135, 206, 250);</span>
+<span class="fc" id="L50">        app.rect(mana.getx(), mana.gety(),(int)((mana.getCurrentmana()/mana.getInitial_mana_cap())*mana.getWidth()),</span>
+<span class="fc" id="L51">                mana.getHeight());</span>
+<span class="fc" id="L52">        app.fill(0);</span>
+<span class="fc" id="L53">        app.textAlign(50);</span>
+<span class="fc" id="L54">        app.textSize(20);</span>
+<span class="fc" id="L55">        app.text((int)mana.getCurrentmana() + &quot; / &quot; + (int)mana.getInitial_mana_cap(), 470, 27);</span>
+<span class="fc" id="L56">        app.fill(0);</span>
+<span class="fc" id="L57">        app.textAlign(50);</span>
+<span class="fc" id="L58">        app.textSize(20);</span>
+<span class="fc" id="L59">        app.text(&quot;Mana:&quot;, 270, 27);</span>
+<span class="fc" id="L60">    }</span>
+    /**
+     * Draws the map elements, including paths, shrubs, and the wizard.
+     * @param app The PApplet used for drawing.
+     */
+    public void drawmap(PApplet app){
+<span class="fc" id="L66">          App ap=new App();</span>
+<span class="fc bfc" id="L67" title="All 2 branches covered.">          for(int i=0;i&lt;boards.getGrass().size();i++){</span>
+<span class="fc" id="L68">              this.pimage=maps.get(&quot;grass&quot;);</span>
+<span class="fc" id="L69">              app.image(pimage,boards.getGrass().get(i).getx(),boards.getGrass().get(i).gety());</span>
+          }
+<span class="fc bfc" id="L71" title="All 2 branches covered.">          for(int i=0;i&lt;boards.getPath().size();i++){</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">                if(boards.getPath().get(i).gettype().equals(&quot;path0&quot;)){</span>
+<span class="fc" id="L73">                  this.pimage=maps.get((&quot;path0&quot;));</span>
+<span class="fc" id="L74">                  app.image(pimage,boards.getPath().get(i).getx(),boards.getPath().get(i).gety());</span>
+              }
+<span class="fc bfc" id="L76" title="All 2 branches covered.">              else if(boards.getPath().get(i).gettype().equals(&quot;path0_clockwise_90&quot;)){</span>
+<span class="fc" id="L77">                  this.pimage=maps.get((&quot;path0&quot;));</span>
+<span class="fc" id="L78">                  this.pimage=ap.rotateImageByDegrees(pimage,90);</span>
+<span class="fc" id="L79">                  app.image(pimage,boards.getPath().get(i).getx(),boards.getPath().get(i).gety());</span>
+              }
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">              else if(boards.getPath().get(i).gettype().equals(&quot;path1_clockwise_180&quot;)){</span>
+<span class="nc" id="L82">                  this.pimage=maps.get((&quot;path1&quot;));</span>
+<span class="nc" id="L83">                  this.pimage=ap.rotateImageByDegrees(pimage,180);</span>
+<span class="nc" id="L84">                  app.image(pimage,boards.getPath().get(i).getx(),boards.getPath().get(i).gety());</span>
+              }
+<span class="fc bfc" id="L86" title="All 2 branches covered.">              else if(boards.getPath().get(i).gettype().equals(&quot;path1_clockwise_90&quot;)){</span>
+<span class="fc" id="L87">                 this.pimage=maps.get((&quot;path1&quot;));</span>
+<span class="fc" id="L88">                 this.pimage=ap.rotateImageByDegrees(pimage,90);</span>
+<span class="fc" id="L89">                  app.image(pimage,boards.getPath().get(i).getx(),boards.getPath().get(i).gety());</span>
+              }
+<span class="fc bfc" id="L91" title="All 2 branches covered.">              else if(boards.getPath().get(i).gettype().equals(&quot;path1_clockwise_-90&quot;)){</span>
+<span class="fc" id="L92">                  this.pimage=maps.get((&quot;path1&quot;));</span>
+<span class="fc" id="L93">                 this.pimage=ap.rotateImageByDegrees(pimage,-90);</span>
+<span class="fc" id="L94">                  app.image(pimage,boards.getPath().get(i).getx(),boards.getPath().get(i).gety());</span>
+              }
+<span class="fc bfc" id="L96" title="All 2 branches covered.">              else if(boards.getPath().get(i).gettype().equals(&quot;path1&quot;)){</span>
+<span class="fc" id="L97">                  this.pimage=maps.get((&quot;path1&quot;));</span>
+<span class="fc" id="L98">                 app.image(pimage,boards.getPath().get(i).getx(),boards.getPath().get(i).gety());</span>
+              }
+<span class="pc bpc" id="L100" title="1 of 2 branches missed.">                else if(boards.getPath().get(i).gettype().equals(&quot;path2_clockwise_-90&quot;)){</span>
+<span class="nc" id="L101">                    this.pimage=maps.get((&quot;path2&quot;));</span>
+<span class="nc" id="L102">                    this.pimage=ap.rotateImageByDegrees(pimage,-90);</span>
+<span class="nc" id="L103">                    app.image(pimage,boards.getPath().get(i).getx(),boards.getPath().get(i).gety());</span>
+                }
+<span class="fc bfc" id="L105" title="All 2 branches covered.">                else if(boards.getPath().get(i).gettype().equals(&quot;path2_clockwise_90&quot;)){</span>
+<span class="fc" id="L106">                    this.pimage=maps.get((&quot;path2&quot;));</span>
+<span class="fc" id="L107">                    this.pimage=ap.rotateImageByDegrees(pimage,90);</span>
+<span class="fc" id="L108">                    app.image(pimage,boards.getPath().get(i).getx(),boards.getPath().get(i).gety());</span>
+                }
+<span class="fc bfc" id="L110" title="All 2 branches covered.">                else if(boards.getPath().get(i).gettype().equals(&quot;path2_clockwise_180&quot;)){</span>
+<span class="fc" id="L111">                    this.pimage=maps.get((&quot;path2&quot;));</span>
+<span class="fc" id="L112">                    this.pimage=ap.rotateImageByDegrees(pimage,180);</span>
+<span class="fc" id="L113">                    app.image(pimage,boards.getPath().get(i).getx(),boards.getPath().get(i).gety());</span>
+<span class="pc bpc" id="L114" title="1 of 2 branches missed.">                }else if(boards.getPath().get(i).gettype().equals(&quot;path2&quot;)){</span>
+<span class="nc" id="L115">                    this.pimage=maps.get((&quot;path2&quot;));</span>
+<span class="nc" id="L116">                    app.image(pimage,boards.getPath().get(i).getx(),boards.getPath().get(i).gety());</span>
+                }
+                else{
+<span class="fc" id="L119">                    this.pimage=maps.get((&quot;path3&quot;));</span>
+<span class="fc" id="L120">                    app.image(pimage,boards.getPath().get(i).getx(),boards.getPath().get(i).gety());</span>
+                }
+          }
+<span class="fc bfc" id="L123" title="All 2 branches covered.">          for(int i=0;i&lt;boards.getShrubs().size();i++){</span>
+<span class="fc" id="L124">              this.pimage=maps.get(&quot;shrub&quot;);</span>
+<span class="fc" id="L125">              app.image(pimage,boards.getShrubs().get(i).getx(),boards.getShrubs().get(i).gety());</span>
+          }
+<span class="fc" id="L127">          this.pimage=maps.get(&quot;grass&quot;);</span>
+<span class="fc" id="L128">          app.image(pimage,boards.getWizard().getx(),boards.getWizard().gety());</span>
+<span class="fc" id="L129">    }</span>
+    /**
+     * Draws both the mana pool and the map elements.
+     * @param app The PApplet used for drawing.
+     */
+    public void draw(PApplet app){
+<span class="fc" id="L135">        drawmanapool(app);</span>
+<span class="fc" id="L136">        drawmap(app);</span>
+<span class="fc" id="L137">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>

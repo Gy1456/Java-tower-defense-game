@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Wave.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">scaffold</a> &gt; <a href="index.source.html" class="el_package">WizardTD.Wavemanage</a> &gt; <span class="el_source">Wave.java</span></div><h1>Wave.java</h1><pre class="source lang-java linenums">package WizardTD.Wavemanage;
+
+import WizardTD.Gamebase.GameSet;
+import WizardTD.MODEL.Mana;
+import WizardTD.MODEL.Monsters;
+
+import java.util.ArrayList;
+
+public class Wave {
+    /**
+     * The list of monsters for the current wave.
+     */
+    private ArrayList&lt;Monsters&gt; monsters;
+    /**
+     * The duration of the pre-wave pause.
+     */
+    private double waves_pre_wave_pause;
+    /**
+     * The duration of the wave itself.
+     */
+    private double waves_duration;
+    /**
+     * The type of monsters for the wave.
+     */
+    private String waves_pre_monsters_type;
+    /**
+     * The health points (hp) of monsters for the wave.
+     */
+    private double waves_pre_monsters_hp;
+    /**
+     * The speed of monsters for the wave.
+     */
+    private double waves_pre_monsters_speed;
+    /**
+     * The armor of monsters for the wave.
+     */
+    private double waves_pre_monsters_armour;
+    /**
+     * The amount of mana gained when killing monsters in the wave.
+     */
+    private double waves_pre_monsters_mana_gained_on_kill;
+    /**
+     * The quantity of monsters in the wave.
+     */
+    private int waves_pre_monsters_quantity;
+    /**
+     * The mana resource of game.
+     */
+    private Mana mana;
+    /**
+     * The constructor of wave,the class use to control the number of monsters and time for each current wave.
+     * @param waves_pre_wave_pause The duration of the pre-wave pause.
+     * @param waves_duration The duration of the wave itself.
+     * @param waves_pre_monsters_type The type of monsters for the wave.
+     * @param waves_pre_monsters_hp The health points (hp) of monsters for the wave.
+     * @param waves_pre_monsters_speed The speed of monsters for the wave.
+     * @param waves_pre_monsters_armour The armor of monsters for the wave.
+     * @param waves_pre_monsters_mana_gained_on_kill The amount of mana gained when killing monsters in the wave.
+     * @param waves_pre_monsters_quantity The quantity of monsters in the wave.
+     * @param mana The mana resource used for controlling the wave.
+     */
+    public Wave(double waves_pre_wave_pause,double waves_duration,
+                String waves_pre_monsters_type,double waves_pre_monsters_hp,double waves_pre_monsters_speed,
+                double waves_pre_monsters_armour,double waves_pre_monsters_mana_gained_on_kill,
+<span class="fc" id="L65">                int waves_pre_monsters_quantity,Mana mana){</span>
+<span class="fc" id="L66">        this.waves_pre_wave_pause=waves_pre_wave_pause;</span>
+<span class="fc" id="L67">        this.waves_duration=waves_duration;</span>
+<span class="fc" id="L68">        this.waves_pre_monsters_type=waves_pre_monsters_type;</span>
+<span class="fc" id="L69">        this.waves_pre_monsters_hp=waves_pre_monsters_hp;</span>
+<span class="fc" id="L70">        this.waves_pre_monsters_speed=waves_pre_monsters_speed;</span>
+<span class="fc" id="L71">        this.waves_pre_monsters_armour=waves_pre_monsters_armour;</span>
+<span class="fc" id="L72">        this.waves_pre_monsters_mana_gained_on_kill=waves_pre_monsters_mana_gained_on_kill;</span>
+<span class="fc" id="L73">        this.waves_pre_monsters_quantity=waves_pre_monsters_quantity;</span>
+<span class="fc" id="L74">        this.mana=mana;</span>
+<span class="fc" id="L75">        this.monsters=new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L76">    }</span>
+    /**
+     *Add monster with current wave number
+     */
+    public void addmonster(){
+<span class="fc bfc" id="L81" title="All 2 branches covered.">        for(int i=0;i&lt;waves_pre_monsters_quantity;i++) {</span>
+<span class="fc" id="L82">            Monsters monsters1 = new Monsters(waves_pre_monsters_type, waves_pre_monsters_hp, waves_pre_monsters_speed,</span>
+                    waves_pre_monsters_armour, waves_pre_monsters_mana_gained_on_kill,mana);
+<span class="fc" id="L84">            monsters.add(monsters1);</span>
+        }
+<span class="fc" id="L86">    }</span>
+    /**
+     * Retrieves the list of monsters for the current wave.
+     * @return The list of monsters for the wave.
+     */
+    public ArrayList&lt;Monsters&gt; getMonsters() {
+<span class="fc" id="L92">        return monsters;</span>
+    }
+    /**
+     * Retrieves the duration of the pre-wave pause.
+     * @return The duration of the pre-wave pause.
+     */
+    public double getWaves_pre_wave_pause() {
+<span class="fc" id="L99">        return waves_pre_wave_pause;</span>
+    }
+    /**
+     * Retrieves the duration of the wave itself.
+     * @return The duration of the wave.
+     */
+    public double getWaves_duration() {
+<span class="fc" id="L106">        return waves_duration;</span>
+    }
+    /**
+     * Retrieves the quantity of monsters in the wave.
+     * @return The quantity of monsters in the wave.
+     */
+    public int getWaves_pre_monsters_quantity() {
+<span class="fc" id="L113">        return waves_pre_monsters_quantity;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>
